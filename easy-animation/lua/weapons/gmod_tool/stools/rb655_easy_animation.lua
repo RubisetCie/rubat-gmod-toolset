@@ -1,5 +1,5 @@
 
-TOOL.Category = "Robotboy655"
+TOOL.Category = "Special"
 TOOL.Name = "#tool.rb655_easy_animation.name"
 TOOL.AnimationArray = {}
 
@@ -281,15 +281,15 @@ function TOOL.BuildCPanel( panel, ent )
 
 	if ( !IsValid( ent ) ) then
 
-		panel:AddControl( "Label", { Text = "#tool.rb655_easy_animation.noent" } ):SetTextColor( clr_err )
+		panel:Help( "#tool.rb655_easy_animation.noent" ):SetTextColor( clr_err )
 
 	elseif ( IsEntValid( ent ) ) then
 
 		local fine = true
 
-		if ( GetConVarNumber( "ai_disabled" ) == 0 and ent:IsNPC() ) then panel:AddControl( "Label", {Text = "#tool.rb655_easy_animation.ai"} ):SetTextColor( clr_err ) fine = false end
-		if ( ent:GetClass() == "prop_ragdoll" ) then panel:AddControl( "Label", { Text = "#tool.rb655_easy_animation.ragdoll" } ):SetTextColor( clr_err ) fine = false end
-		if ( ent:GetClass() == "prop_physics" or ent:GetClass() == "prop_physics_multiplayer" or ent:GetClass() == "prop_physics_override" ) then panel:AddControl( "Label", { Text = "#tool.rb655_easy_animation.prop" } ):SetTextColor( clr_err ) end
+		if ( GetConVarNumber( "ai_disabled" ) == 0 and ent:IsNPC() ) then panel:Help( "#tool.rb655_easy_animation.ai" ):SetTextColor( clr_err ) fine = false end
+		if ( ent:GetClass() == "prop_ragdoll" ) then panel:Help( "#tool.rb655_easy_animation.ragdoll" ):SetTextColor( clr_err ) fine = false end
+		if ( ent:GetClass() == "prop_physics" or ent:GetClass() == "prop_physics_multiplayer" or ent:GetClass() == "prop_physics_override" ) then panel:Help( "#tool.rb655_easy_animation.prop" ):SetTextColor( clr_err ) end
 
 		local t = {}
 		local badBegginings = { "g_", "p_", "e_", "b_", "bg_", "hg_", "tc_", "aim_", "turn", "gest_", "pose_", "pose_", "auto_", "layer_", "posture", "bodyaccent", "a_" }
@@ -308,10 +308,35 @@ function TOOL.BuildCPanel( panel, ent )
 		end
 
 		if ( fine ) then
-			local filter = panel:AddControl( "TextBox", { Label = "#spawnmenu.quick_filter_tool" } )
+			local filter = panel:TextEntry( "#spawnmenu.quick_filter_tool" )
 			filter:SetUpdateOnType( true )
 
-			local animList = panel:AddControl( "ListBox", { Label = "#tool.rb655_easy_animation.animations", Options = t, Height = 225 } )
+			local animList = vgui.Create( "DListView" )
+			animList:AddColumn( "#tool.rb655_easy_animation.animations" )
+			animList:SetMultiSelect( false )
+			for k, v in pairs( t ) do
+
+				local line = animList:AddLine( k )
+				line.data = v
+
+				for k, v in pairs( line.data ) do
+					if ( GetConVarString( k ) == tostring( v ) ) then
+						line:SetSelected( true )
+					end
+				end
+
+			end
+
+			animList:SetTall( 225 )
+			animList:SortByColumn( 1, false )
+
+			function animList:OnRowSelected( LineID, Line )
+				for k, v in pairs( Line.data ) do
+					RunConsoleCommand( k, v )
+				end
+			end
+
+			panel:AddItem( animList )
 
 			-- patch the function to take into account visiblity
 			function animList:DataLayout()
@@ -346,7 +371,7 @@ function TOOL.BuildCPanel( panel, ent )
 
 	elseif ( !IsEntValid( ent ) ) then
 
-		panel:AddControl( "Label", { Text = "#tool.rb655_easy_animation.badent" } ):SetTextColor( clr_err )
+		panel:Help( "#tool.rb655_easy_animation.badent" ):SetTextColor( clr_err )
 
 	end
 
@@ -396,13 +421,21 @@ function TOOL.BuildCPanel( panel, ent )
 
 	panel:AddPanel( pnl )
 
-	panel:AddControl( "Button", { Label = "#tool.rb655_easy_animation.add", Command = "rb655_easy_animation_add" } )
+	local addBtn = vgui.Create( "DButton", panel )
+	function addBtn:DoClick() LocalPlayer():ConCommand( "rb655_easy_animation_add" ) end
+	addBtn:SetText( "#tool.rb655_easy_animation.add" )
+	panel:AddPanel( addBtn )
 	panel:ControlHelp( "#tool.rb655_easy_animation.add.help" )
-	panel:AddControl( "Slider", { Label = "#tool.rb655_easy_animation.speed", Type = "Float", Min = 0.05, Max = 3.05, Command = "rb655_easy_animation_speed", Help = true } )
-	panel:AddControl( "Slider", { Label = "#tool.rb655_easy_animation.delay", Type = "Float", Min = 0, Max = 32, Command = "rb655_easy_animation_delay", Help = true } )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_animation.loop", Command = "rb655_easy_animation_loop", Help = true } )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_animation.nohide", Command = "rb655_easy_animation_nohide", Help = true } )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_animation.noglow", Command = "rb655_easy_animation_noglow", Help = true } )
+	panel:NumSlider( "#tool.rb655_easy_animation.speed", "rb655_easy_animation_speed", 0.05, 3.05, 2 )
+	panel:ControlHelp( "#tool.rb655_easy_animation.speed.help" )
+	panel:NumSlider( "#tool.rb655_easy_animation.delay", "rb655_easy_animation_delay", 0, 32, 2 )
+	panel:ControlHelp( "#tool.rb655_easy_animation.delay.help" )
+	panel:CheckBox( "#tool.rb655_easy_animation.loop", "rb655_easy_animation_loop" )
+	panel:ControlHelp( "#tool.rb655_easy_animation.loop.help" )
+	panel:CheckBox( "#tool.rb655_easy_animation.nohide", "rb655_easy_animation_nohide" )
+	panel:ControlHelp( "#tool.rb655_easy_animation.nohide.help" )
+	panel:CheckBox( "#tool.rb655_easy_animation.noglow", "rb655_easy_animation_noglow" )
+	panel:ControlHelp( "#tool.rb655_easy_animation.noglow.help" )
 end
 
 function TOOL:DrawHUD()

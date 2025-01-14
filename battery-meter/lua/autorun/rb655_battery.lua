@@ -65,17 +65,37 @@ language.Add( "rb655.batmeter.enable", "Enable" )
 language.Add( "rb655.batmeter.position", "Position" )
 
 hook.Add( "PopulateToolMenu", "rb655_AddBatteryMeterOption", function()
-	spawnmenu.AddToolMenuOption( "Utilities", "Robotboy655", "rb655_batmeter", "#rb655.batmeter", "", "", function( panel )
-		panel:AddControl( "CheckBox", { Label = "#rb655.batmeter.enable", Command = "rb655_batmeter" } )
-		panel:AddControl( "ListBox", { Label = "#rb655.batmeter.position", Height = 85, Options = {
+	spawnmenu.AddToolMenuOption( "Utilities", "rubat", "rb655_batmeter", "#rb655.batmeter", "", "", function( panel )
+		panel:CheckBox( "#rb655.batmeter.enable", "rb655_batmeter" )
+		local listOptions = {
 			[ "#rb655.batmeter.0" ] = { rb655_batmeter_pos = "0" },
 			[ "#rb655.batmeter.1" ] = { rb655_batmeter_pos = "1" },
 			[ "#rb655.batmeter.2" ] = { rb655_batmeter_pos = "2" },
 			[ "#rb655.batmeter.3" ] = { rb655_batmeter_pos = "3" }
-		} } )
+		}
+		local list = vgui.Create( "DListView" )
+		list:SetMultiSelect( false )
+		list:AddColumn( "#rb655.batmeter.position" )
+		for k, v in pairs( listOptions ) do
+			local line = list:AddLine( k )
+			line.data = v
+			for k, v in pairs( line.data ) do
+				if ( GetConVarString( k ) == tostring( v ) ) then
+					line:SetSelected( true )
+				end
+			end
+		end
+		list:SetTall( 85 )
+		list:SortByColumn( 1, false )
+		function list:OnRowSelected( LineID, Line )
+			for k, v in pairs( Line.data ) do
+				RunConsoleCommand( k, v )
+			end
+		end
+		panel:AddItem( list )
 	end )
 end )
 
 hook.Add( "AddToolMenuCategories", "rb655_CreateUtilitiesCategory", function()
-	spawnmenu.AddToolCategory( "Utilities", "Robotboy655", "#Robotboy655" )
+	spawnmenu.AddToolCategory( "Utilities", "rubat", "Fun" )
 end )

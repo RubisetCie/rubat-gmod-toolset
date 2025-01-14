@@ -1,5 +1,5 @@
 
-TOOL.Category = "Robotboy655"
+TOOL.Category = "Special"
 TOOL.Name = "#tool.rb655_easy_inspector.name"
 
 TOOL.ClientConVar[ "noglow" ] = "0"
@@ -61,34 +61,6 @@ local function renderDrawBox( pos, ang, min, max, bWire, color )
 		render.SetMaterial( mat_wireframe )
 		render.DrawBox( pos, ang, min, max )
 	end
-
-	-- 3D2D experiment gone wrong
-	--[[if ( GetConVarNumber( "rb655_easy_inspector_box_dim" ) < 1 ) then return end
-
-	-- Do not modify the original data
-	local pos = Vector( pos )
-	local ang = Angle( ang )
-
-	local fwd = pos + ang:Forward() * max.x + ang:Up() * max.z - ang:Right() * max.y
-	local right = pos + ang:Forward() * max.x / 2 + ang:Up() * max.z - ang:Right() * max.y
-	ang:RotateAroundAxis( ang:Forward(), 90 )
-	ang:RotateAroundAxis( ang:Right(), -90 )
-	cam.Start3D2D( fwd, ang, .5 )
-		surface.SetDrawColor( 0, 0, 0, 255 )
-		--surface.DrawRect( 0, 0, 8, 8 )
-
-		draw.SimpleText( max.y - min.y, "rb655_attachment", 0, 0, color_white )
-	cam.End3D2D()
-
-	ang:RotateAroundAxis( ang:Right(), -90 )
-	cam.Start3D2D( right, ang, .5 )
-		surface.SetDrawColor( 0, 0, 0, 255 )
-		--surface.DrawRect( 0, 0, 8, 8 )
-
-		draw.SimpleText( max.x - min.x, "rb655_attachment", 0, 0, color_white )
-		draw.SimpleText( max.x - min.x, "rb655_attachment", 0, 0, color_white )
-		draw.SimpleText( max.x - min.x, "rb655_attachment", 0, 0, color_white )
-	cam.End3D2D()]]
 
 end
 
@@ -233,7 +205,7 @@ AddInfoFunc( {
 	name = "Physics Box",
 	check = function( ent )
 		if ( !ent.InspectorMeshes or table.IsEmpty( ent.InspectorMeshes ) ) then
-			return "Entity doesn't have any physics objects! Or we failed to get it."
+			return "Entity doesn't have any physics objects!"
 		end
 	end,
 	-- This is a hacky one..
@@ -283,43 +255,6 @@ AddInfoFunc( {
 
 	end
 } )
-
---[[
-AddInfoFunc( {
-	name = "Physics Box CL",
-	check = function( ent )
-		if ( ent:GetPhysicsObjectCount() < 1 ) then
-			return "Entity doesn't have any clientside physics objects! Or we failed to get it."
-		end
-	end,
-	-- This is a hacky one..
-	func = function( ent, labels, dirs )
-
-		cam.Start3D( EyePos(), EyeAngles() )
-
-		mat_wireframe:SetVector( "$color", Vector( 1, 1, 1 ) )
-		render.SetMaterial( mat_wireframe )
-		for i=0, ent:GetPhysicsObjectCount()-1 do
-			if ( !IsValid( ent:GetPhysicsObjectNum( i ) ) ) then continue end
-			local matrix = Matrix()
-			-- local bonemat = ent:GetBoneMatrix( ent:TranslatePhysBoneToBone( i) )
-			-- if ( bonemat and !ent:IsNPC() and !ent:IsPlayer() ) then matrix:SetAngles( bonemat:GetAngles() ) else matrix:SetAngles( ent:GetAngles() ) end
-			-- if ( bonemat and !ent:IsNPC() and !ent:IsPlayer() ) then matrix:SetTranslation( bonemat:GetTranslation() ) else matrix:SetTranslation( ent:GetPos() ) end
-			matrix:SetAngles( ent:GetPhysicsObjectNum( i ):GetAngles() )
-			matrix:SetTranslation( ent:GetPhysicsObjectNum( i ):GetPos() )
-			cam.PushModelMatrix( matrix )
-
-			local mesh = Mesh()
-			mesh:BuildFromTriangles( ent:GetPhysicsObjectNum( i ):GetMesh() )
-			mesh:Draw()
-
-			cam.PopModelMatrix()
-		end
-
-		cam.End3D()
-
-	end
-} )]]
 
 local hitboxGroupColors = {
 	Color( 255, 128, 128 ),
@@ -921,15 +856,24 @@ list.Set( "RB_EI_UNITS", "#unit.miles", { rb655_easy_inspector_units = 4 } )
 list.Set( "RB_EI_UNITS", "#unit.inch", { rb655_easy_inspector_units = 5 } )
 list.Set( "RB_EI_UNITS", "#unit.foot", { rb655_easy_inspector_units = 6 } )
 
-function TOOL.BuildCPanel( panel, nope )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_inspector.noglow", Command = "rb655_easy_inspector_noglow" } )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_inspector.lp", Command = "rb655_easy_inspector_lp" } )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_inspector.names", Command = "rb655_easy_inspector_names" } )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_inspector.dir", Command = "rb655_easy_inspector_dir" } )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_inspector.hook", Command = "rb655_easy_inspector_hook" } )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_inspector.box_dim", Command = "rb655_easy_inspector_box_dim" } )
+function TOOL.BuildCPanel( panel )
+	panel:CheckBox( "#tool.rb655_easy_inspector.noglow", "rb655_easy_inspector_noglow" )
+	panel:CheckBox( "#tool.rb655_easy_inspector.lp", "rb655_easy_inspector_lp" )
+	panel:CheckBox( "#tool.rb655_easy_inspector.names", "rb655_easy_inspector_names" )
+	panel:CheckBox( "#tool.rb655_easy_inspector.dir", "rb655_easy_inspector_dir" )
+	panel:CheckBox( "#tool.rb655_easy_inspector.hook", "rb655_easy_inspector_hook" )
+	panel:CheckBox( "#tool.rb655_easy_inspector.box_dim", "rb655_easy_inspector_box_dim" )
 
-	panel:AddControl( "ComboBox", { Label = "#tool.rb655_easy_inspector.units", Options = list.Get( "RB_EI_UNITS" ) } )
+	local unitList = vgui.Create( "CtrlListBox", panel )
+	local unitListLabel = vgui.Create( "DLabel", panel )
+	for k, v in pairs( list.Get( "RB_EI_UNITS" ) ) do
+		unitList:AddOption( k, v )
+	end
+	unitListLabel:SetText( "#tool.rb655_easy_inspector.units" )
+	unitListLabel:SetDark( true )
+	unitList:SetHeight( 25 )
+	unitList:Dock( TOP )
+	panel:AddItem( unitListLabel, unitList )
 
 	-- TODO: Maybe most of these one liners could go onto separate inspect mode, like ent_text?
 	-- TODO: Entity flags?
@@ -1178,18 +1122,6 @@ function TOOL:DrawHUD( b )
 		-- THE WORLD FUNCS, These only work when we do not have an entity selected and only with world flag
 		if ( !InfoFuncs[ self:GetSelectedFunc() ].world ) then return end
 
-		--[[if ( InfoFuncs[ self:GetSelectedFunc() ].check ) then
-			local check = InfoFuncs[ self:GetSelectedFunc() ].check()
-			if ( check ) then
-				local pos = ent:LocalToWorld( ent:OBBCenter() ):ToScreen()
-
-				--if ( !tobool( self:GetClientNumber( "names" ) ) ) then return end
-
-				draw.SimpleText( check, "rb655_attachment", pos.x, pos.y, Color( 255, 100, 100 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-
-				return
-			end
-		end]]
 		InfoFuncs[ self:GetSelectedFunc() ].func( game.GetWorld(), tobool( self:GetClientNumber( "names" ) ), tobool( self:GetClientNumber( "dir" ) ) )
 
 		return

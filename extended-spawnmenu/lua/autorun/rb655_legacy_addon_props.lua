@@ -36,9 +36,6 @@ end
 hook.Add( "PopulateContent", "LegacyAddonProps", function( pnlContent, tree, node )
 
 	if ( !IsValid( node ) or !IsValid( pnlContent ) ) then
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR LEGACY ADDONS!!!" )
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR LEGACY ADDONS!!!" )
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR LEGACY ADDONS!!!" )
 		return
 	end
 
@@ -75,8 +72,6 @@ hook.Add( "PopulateContent", "LegacyAddonProps", function( pnlContent, tree, nod
 
 	end
 
-	--[[ -------------------------- DOWNLOADS -------------------------- ]]
-
 	local fi, fo = file.Find( "download/models", "MOD" )
 	if ( !fi and !fo ) then return end
 
@@ -104,33 +99,6 @@ hook.Add( "PopulateContent", "LegacyAddonProps", function( pnlContent, tree, nod
 	end
 
 end )
-
---[[ -------------------------------------------------------------------------- The addon info -------------------------------------------------------------------------- ]]
-
-concommand.Add( "extsm_addoninfo", function()
-	local frame = vgui.Create( "DFrame" )
-	frame:SetSize( ScrW() - 100, ScrH() - 100 )
-	frame:Center()
-	frame:MakePopup()
-
-	local sp = frame:Add( "DScrollPanel" )
-	sp:Dock( FILL )
-
-	sp:Add( "rb655_addonInfo" )
-end )
-
-hook.Add( "AddToolMenuCategories", "LegacyAddonPropsInfoCategory", function()
-	spawnmenu.AddToolCategory( "Utilities", "Robotboy655", "#Robotboy655" )
-end )
-
-hook.Add( "PopulateToolMenu", "LegacyAddonPropsInfoThing", function()
-	spawnmenu.AddToolMenuOption( "Utilities", "Robotboy655", "LegacyInfoPanel", "Addon Information", "", "", function( panel )
-		panel:ClearControls()
-		panel:Button( "Open addon data window", "extsm_addoninfo" )
-	end )
-end )
-
-----------------------------------
 
 function ScreenScaleH( size )
 	return size * ( ScrH() / 480.0 )
@@ -220,7 +188,6 @@ function PANEL:Compute()
 		table.insert( self.WorkshopWasteFiles, { "addons/" .. fle, file.Size( "addons/" .. fle, "MOD" ) or 0 } )
 	end
 
-	-- -------------------------------------------
 
 	local _files, folders = file.Find( "addons/*", "MOD" )
 
@@ -242,7 +209,6 @@ function PANEL:Compute()
 		end
 	end
 
-	-- -------------------------------------------
 
 	local luaFiles = file.Find( "cache/lua/*", "MOD" )  -- Too many files to count actual size!
 	self.LuaCacheSize = #luaFiles * 1400
@@ -268,7 +234,6 @@ function PANEL:Paint( w, h )
 	local txtW = self:GetParent():GetWide()
 	local txtH = 0
 
-	-- -----------------------
 
 	local tW, tH = DrawText( "Cache Sizes", "AddonInfo_Header", 0, txtH, color_white )
 	txtH = txtH + tH
@@ -276,7 +241,6 @@ function PANEL:Paint( w, h )
 	local localH = 0
 	local localW = 0
 
-	-- -----------------------
 
 	tW, tH = DrawText( "~" .. GetSize( self.LuaCacheSize or 0 ) .. " (" .. self.LuaCacheFiles .. " files)", "AddonInfo_Small", 0, txtH + localH, Color( 220, 220, 220 ) )
 	localH = localH + tH
@@ -286,7 +250,6 @@ function PANEL:Paint( w, h )
 	localH = localH + tH
 	localW = math.max( localW, tW )
 
-	-- -----------------------
 
 	localW = localW + 25
 
@@ -296,13 +259,9 @@ function PANEL:Paint( w, h )
 	tW, tH = DrawText( "Workshop download cache", "AddonInfo_Small", localW, txtH, color_white )
 	txtH = txtH + tH
 
-	-- -------------------------------------------
-
 	txtH = txtH + ScreenScaleH( 8 )
 	tW, tH = DrawText( "Workshop Subscriptions", "AddonInfo_Header", 0, txtH, color_white )
 	txtH = txtH + tH
-
-	-- -------------------------------------------
 
 	tW, tH = DrawText( "Used Size:  ", "AddonInfo_Text", 0, txtH, color_white )
 	local maxW = tW
@@ -316,8 +275,6 @@ function PANEL:Paint( w, h )
 	maxW = math.max( maxW, tW )
 	txtH = txtH - tH * 2
 
-	-- -------------------------------------------
-
 	tW, tH = DrawText( GetSize( ( self.WorkshopSize - self.WorkshopWaste ) or 0 ), "AddonInfo_Text", maxW, txtH, Color( 220, 220, 220 ) )
 	txtH = txtH + tH
 
@@ -326,8 +283,6 @@ function PANEL:Paint( w, h )
 
 	tW, tH = DrawText( GetSize( self.WorkshopSize or 0 ), "AddonInfo_Text", maxW, txtH, Color( 220, 220, 220 ) )
 	txtH = txtH + tH * 2
-
-	-- -------------------------------------------
 
 	tW, tH = DrawText( "Files that aren't used: ( Safe to delete )", "AddonInfo_Text", 0, txtH, color_white )
 	txtH = txtH + tH
@@ -345,12 +300,8 @@ function PANEL:Paint( w, h )
 		txtH = txtH + tH
 	end
 
-	-- -------------------------------------------
-
 	tW, tH = DrawText( "Legacy Addons", "AddonInfo_Header", 0, txtH + ScreenScaleH( 8 ), color_white )
 	txtH = txtH + tH + ScreenScaleH( 8 )
-
-	-- -------------------------------------------
 
 	tW, tH = DrawText( "Legacy Addons with models:", "AddonInfo_Text", 0, txtH, color_white )
 	txtH = txtH + tH
@@ -376,55 +327,21 @@ function PANEL:Paint( w, h )
 		txtH = txtH + tH
 	end
 
-	if ( !system.IsWindows() ) then
-		txtH = txtH + tH
-
-		tW, tH = DrawText( "OSX AND LINUX USERS BEWARE:", "AddonInfo_Text", 0, txtH, color_white )
-		txtH = txtH + tH
-		tW, tH = DrawText( "MAKE SURE ALL FILE AND FOLDER NAMES", "AddonInfo_Text", 0, txtH, color_white )
-		txtH = txtH + tH
-		tW, tH = DrawText( "IN ALL ADDONS ARE LOWERCASE ONLY", "AddonInfo_Text", 0, txtH, color_white )
-		txtH = txtH + tH
-		tW, tH = DrawText( "INCLUDING ALL SUB FOLDERS", "AddonInfo_Text", 0, txtH, color_white )
-		txtH = txtH + tH
-	end
-
 	txtH = txtH + tH
-
-	-- -------------------------------------------
 
 	self:SetSize( txtW, txtH )
 end
 
 vgui.Register( "rb655_addonInfo", PANEL, "Panel" )
 
---[[ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ]]
-
 -- I spent too much time on this than I care to admit
 hook.Add( "PopulatePropMenu", "rb655_LoadLegacySpawnlists", function()
 
 	local sid = 0 --table.Count( spawnmenu.GetPropTable() )
 
-	--local added = false
-
 	for id, spawnlist in pairs( file.Find( "settings/spawnlist/*.txt", "MOD" ) ) do
 		local content = file.Read( "settings/spawnlist/" .. spawnlist, "MOD" )
 		if ( !content ) then continue end
-
-		--[[local is = string.find( content, "TableToKeyValues" )
-		if ( is != nil ) then continue end
-
-		for id, t in pairs( spawnmenu.GetPropTable() ) do -- This somehow freezes the game when opening Q menu => FUCK THIS SHIT
-			if ( t.name == "Legacy Spawnlists" ) then
-				added = true
-				sid = t.id
-			end
-		end
-
-		if ( !added ) then
-			spawnmenu.AddPropCategory( "rb655_legacy_spawnlists", "Legacy Spawnlists", {}, "icon16/folder.png", sid, 0 )
-			added = true
-		end]]
 
 		content = util.KeyValuesToTable( content )
 

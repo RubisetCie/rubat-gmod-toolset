@@ -17,7 +17,7 @@ end
 
 language.Add( "rb655.vol_light.name", "Adv. Light Rays" )
 language.Add( "rb655.vol_light.enable", "Enable" )
-language.Add( "rb655.vol_light.los", "Test Line Of Sight" )
+language.Add( "rb655.vol_light.los", "Test Line of Sight" )
 language.Add( "rb655.vol_light.los.help", "Enable this to stop drawing the effects behind walls or other objects." )
 language.Add( "rb655.vol_light.mindistance", "Min Distance" )
 language.Add( "rb655.vol_light.mindistance.help", "The minimum distance ( on screen, not in game world ) between each effect ( entity ) in pixels. This is mainly made for ravenholm and I suggest value of 128." )
@@ -151,7 +151,6 @@ concommand.Add( "pp_vol_light_edit", function()
 	but_revert:SetTooltip( "#rb655.vol_light.revert.help" )
 	but_revert.DoClick = function()
 		local name = pp_vol_light_entities[ classList:GetLine( classList:GetSelectedLine() ):GetValue( 1 ) ]
-
 		slider_mul:SetValue( name.mul )
 		slider_dark:SetValue( name.dark )
 		slider_size:SetValue( name.size )
@@ -262,7 +261,7 @@ local function VolLightTestLOS( ent1, ent2 )
 		start = ent1:GetShootPos(),
 		endpos = ent2:GetPos(),
 		filter = { ent1, ent2, ent2:GetParent() }
-	 } )
+	} )
 
 	return trace.Hit
 end
@@ -292,17 +291,30 @@ end )
 
 list.Set( "PostProcess", "#rb655.vol_light.name", { icon = "gui/postprocess/rb655_vol_light.png", convar = "pp_vol_light", category = "Robotboy655", cpanel = function( panel )
 
-	panel:AddControl( "ComboBox", { MenuButton = 1, Folder = "rb655_vol_light", Options = { [ "#preset.default" ] = ConVars }, CVars = table.GetKeys( ConVars ) } )
+	local presets = vgui.Create( "ControlPresets", panel )
+	presets:SetPreset( "rb655_vol_light" )
+	presets:AddOption( "#preset.default", ConVars )
+	for k, v in pairs( table.GetKeys( ConVars ) ) do
+		presets:AddConVar( v )
+	end
+	panel:AddPanel( presets )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.vol_light.enable", Command = "pp_vol_light" } )
-	panel:AddControl( "CheckBox", { Label = "#rb655.vol_light.los", Command = "pp_vol_light_los", Help = true } )
+	panel:CheckBox( "#rb655.vol_light.enable", "pp_vol_light" )
+	panel:CheckBox( "#rb655.vol_light.los", "pp_vol_light_los" )
+	panel:ControlHelp( "#rb655.vol_light.los.help" )
 	panel:Button( "#rb655.vol_light.edit", "pp_vol_light_edit" )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.vol_light.override", Command = "pp_vol_light_override", Help = true } )
-	panel:AddControl( "Slider", { Label = "#rb655.vol_light.multiply", Command = "pp_vol_light_mul", Type = "Float", Min = "0", Max = "10", Help = true } )
-	panel:AddControl( "Slider", { Label = "#rb655.vol_light.darken", Command = "pp_vol_light_dark", Type = "Float", Min = "0", Max = "1", Help = true } )
-	panel:AddControl( "Slider", { Label = "#rb655.vol_light.size", Command = "pp_vol_light_size", Type = "Float", Min = "0", Max = "10", Help = true } )
-	panel:AddControl( "Slider", { Label = "#rb655.vol_light.maxdistance", Command = "pp_vol_light_maxdistance", Type = "Float", Min = "128", Max = "2048", Help = true } )
-	panel:AddControl( "Slider", { Label = "#rb655.vol_light.mindistance", Command = "pp_vol_light_mindistance", Type = "Float", Min = "0", Max = "512", Help = true } )
+	panel:CheckBox( "#rb655.vol_light.override", "pp_vol_light_override" )
+	panel:ControlHelp( "#rb655.vol_light.override.help" )
+	panel:NumSlider( "#rb655.vol_light.multiply", "pp_vol_light_mul", 0, 10, 2 )
+	panel:ControlHelp( "#rb655.vol_light.multiply.help" )
+	panel:NumSlider( "#rb655.vol_light.darken", "pp_vol_light_dark", 0, 1, 2 )
+	panel:ControlHelp( "#rb655.vol_light.darken.help" )
+	panel:NumSlider( "#rb655.vol_light.size", "pp_vol_light_size", 0, 10, 2 )
+	panel:ControlHelp( "#rb655.vol_light.size.help" )
+	panel:NumSlider( "#rb655.vol_light.maxdistance", "pp_vol_light_maxdistance", 128, 2048, 2 )
+	panel:ControlHelp( "#rb655.vol_light.maxdistance.help" )
+	panel:NumSlider( "#rb655.vol_light.mindistance", "pp_vol_light_mindistance", 0, 512, 2 )
+	panel:ControlHelp( "#rb655.vol_light.mindistance.help" )
 
 end } )

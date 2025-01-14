@@ -1,6 +1,4 @@
 
--- TODO: This is very unfinished
-
 -- Cateogory Overrides
 local fieldCats = {
 	[ "ClassName" ] = "Basic",
@@ -116,7 +114,6 @@ function PANEL:DoExpand( b )
 			addRowByType( self.Container, "Members", k, v, self.internalTable )
 		end
 
-		-- This is a bit MESSY
 		--self.Container:GetCanvas():GetCanvas():InvalidateLayout( true )
 		self.Container:SetTall( self.Container:GetCanvas():GetCanvas():GetTall() )
 		self.Container:InvalidateLayout( true )
@@ -172,8 +169,6 @@ function PANEL:Setup( vars )
 end
 
 derma.DefineControl( "DProperty_Table", "", PANEL, "DProperty_Generic" )
-
---------------------------------------------------------------------- The main window ---------------------------------------------------------------------
 
 local PANEL = {}
 
