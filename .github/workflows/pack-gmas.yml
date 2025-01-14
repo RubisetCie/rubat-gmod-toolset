@@ -1,0 +1,41 @@
+name: Create GMAs
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Installing Premake
+        run: sudo apt-get install premake4
+      - name: Building Bootil
+        run: |
+          git clone --depth 1 https://github.com/garrynewman/bootil.git && cd bootil/projects
+          premake4 gmake && cd linux/gmake && make config=release
+        working-directory: ..
+      - name: Building GMAD
+        run: |
+          git clone --depth 1 https://github.com/Facepunch/gmad.git && cd gmad
+          premake4 --outdir=. --bootil_lib=../bootil/lib/linux/gmake --bootil_inc=../bootil/include gmake && make config=release
+        working-directory: ..
+      - name: Creating GMAs
+        run: |
+          ../gmad/gmad_linux create -folder achievement-viewer -out achievement-viewer.gma
+          ../gmad/gmad_linux create -folder battery-meter -out battery-meter.gma
+          ../gmad/gmad_linux create -folder easy-inspector -out easy-inspector.gma
+          ../gmad/gmad_linux create -folder easy-animation -out easy-animation.gma
+          ../gmad/gmad_linux create -folder easy-bodygroup -out easy-bodygroup.gma
+          ../gmad/gmad_linux create -folder easy-bonemerge -out easy-bonemerge.gma
+          ../gmad/gmad_linux create -folder easy-navmesh-editor -out easy-navmesh-editor.gma
+          ../gmad/gmad_linux create -folder extended-properties -out extended-properties.gma
+          ../gmad/gmad_linux create -folder extended-spawnmenu -out extended-spawnmenu.gma
+          ../gmad/gmad_linux create -folder post-processing-pack -out post-processing-pack.gma
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gmod-toolset
+          path: "*.gma"
+          overwrite: true
+          compression-level: 9
+          if-no-files-found: error
