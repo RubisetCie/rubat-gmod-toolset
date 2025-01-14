@@ -51,8 +51,6 @@ local function getGameList()
 	return games
 end
 
---[[ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ]]
-
 local theSound = nil
 
 function rb655_playsound( snd )
@@ -193,9 +191,6 @@ local browseAddonSounds
 hook.Add( "PopulateContent", "SpawnmenuLoadSomeSounds", function( pnlContent, tree, browseNode ) timer.Simple( 0.5, function()
 
 	if ( !IsValid( tree ) or !IsValid( pnlContent ) ) then
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR SOUNDS !!!" )
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR SOUNDS !!!" )
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR SOUNDS !!!" )
 		return
 	end
 
@@ -206,15 +201,11 @@ hook.Add( "PopulateContent", "SpawnmenuLoadSomeSounds", function( pnlContent, tr
 	browseSounds.ViewPanel = ViewPanel
 	browseSounds.pnlContent = pnlContent
 
-	--[[ --------------------------------------------------------------------------------------- ]]
-
 	browseAddonSounds = browseSounds:AddNode( "#spawnmenu.category.addons", "icon16/folder_database.png" )
 	browseAddonSounds.ViewPanel = ViewPanel
 	browseAddonSounds.pnlContent = pnlContent
 
 	RefreshAddonSounds( browseAddonSounds )
-
-	--[[ --------------------------------------------------------------------------------------- ]]
 
 	local addon_sounds = {}
 	local _, snd_folders = file.Find( "addons/*", "MOD" )
@@ -236,11 +227,7 @@ hook.Add( "PopulateContent", "SpawnmenuLoadSomeSounds", function( pnlContent, tr
 
 	end
 
-	--[[ --------------------------------------------------------------------------------------- ]]
-
 	AddBrowseContentSnd( browseSounds, "#spawnmenu.category.downloads", "icon16/folder_database.png", "download/", "MOD" )
-
-	--[[ --------------------------------------------------------------------------------------- ]]
 
 	browseGameSounds = browseSounds:AddNode( "#spawnmenu.category.games", "icon16/folder_database.png" )
 	browseGameSounds.ViewPanel = ViewPanel
@@ -254,7 +241,6 @@ hook.Add( "GameContentChanged", "ES_RefreshSpawnmenuSounds", function()
 
 	if ( IsValid( browseAddonSounds ) ) then
 
-		-- TODO: Maybe be more advaced and do not delete => recreate all the nodes, only delete nodes for addons that were removed, add only the new ones?
 		browseAddonSounds:Clear()
 		browseAddonSounds.ViewPanel:Clear( true )
 
@@ -264,7 +250,6 @@ hook.Add( "GameContentChanged", "ES_RefreshSpawnmenuSounds", function()
 
 	if ( IsValid( browseGameSounds ) ) then
 
-		-- TODO: Maybe be more advaced and do not delete => recreate all the nodes, only delete nodes for addons that were removed, add only the new ones?
 		browseGameSounds:Clear()
 		browseGameSounds.ViewPanel:Clear( true )
 
@@ -273,8 +258,6 @@ hook.Add( "GameContentChanged", "ES_RefreshSpawnmenuSounds", function()
 	end
 
 end )
-
---[[ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ]]
 
 local badShaders = {
 	"lightmappedgeneric",
@@ -453,9 +436,6 @@ local browseGameMaterials
 hook.Add( "PopulateContent", "SpawnmenuLoadSomeMaterials", function( pnlContent, tree, browseNode ) timer.Simple( 0.5, function()
 
 	if ( !IsValid( tree ) or !IsValid( pnlContent ) ) then
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR MATERIALS!!!" )
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR MATERIALS!!!" )
-		print( "!!! Extended Spawnmenu: FAILED TO INITALIZE PopulateContent HOOK FOR MATERIALS!!!" )
 		return
 	end
 
@@ -466,15 +446,11 @@ hook.Add( "PopulateContent", "SpawnmenuLoadSomeMaterials", function( pnlContent,
 	browseMaterials.ViewPanel = ViewPanel
 	browseMaterials.pnlContent = pnlContent
 
-	--[[ --------------------------------------------------------------------------------------- ]]
-
 	browseAddonMaterials = browseMaterials:AddNode( "#spawnmenu.category.addons", "icon16/folder_database.png" )
 	browseAddonMaterials.ViewPanel = ViewPanel
 	browseAddonMaterials.pnlContent = pnlContent
 
 	RefreshAddonMaterials( browseAddonMaterials )
-
-	--[[ --------------------------------------------------------------------------------------- ]]
 
 	local addon_mats = {}
 	local _, mat_folders = file.Find( "addons/*", "MOD" )
@@ -496,11 +472,7 @@ hook.Add( "PopulateContent", "SpawnmenuLoadSomeMaterials", function( pnlContent,
 
 	end
 
-	--[[ --------------------------------------------------------------------------------------- ]]
-
 	AddBrowseContentMaterial( browseMaterials, "#spawnmenu.category.downloads", "icon16/folder_database.png", "download/", "MOD" )
-
-	--[[ --------------------------------------------------------------------------------------- ]]
 
 	browseGameMaterials = browseMaterials:AddNode( "#spawnmenu.category.games", "icon16/folder_database.png" )
 	browseGameMaterials.ViewPanel = ViewPanel
@@ -514,7 +486,6 @@ hook.Add( "GameContentChanged", "ES_RefreshSpawnmenuMaterials", function()
 
 	if ( IsValid( browseAddonMaterials ) ) then
 
-		-- TODO: Maybe be more advaced and do not delete => recreate all the nodes, only delete nodes for addons that were removed, add only the new ones?
 		browseAddonMaterials:Clear()
 		browseAddonMaterials.ViewPanel:Clear( true )
 
@@ -524,7 +495,6 @@ hook.Add( "GameContentChanged", "ES_RefreshSpawnmenuMaterials", function()
 
 	if ( IsValid( browseGameMaterials ) ) then
 
-		-- TODO: Maybe be more advaced and do not delete => recreate all the nodes, only delete nodes for addons that were removed, add only the new ones?
 		browseGameMaterials:Clear()
 		browseGameMaterials.ViewPanel:Clear( true )
 
@@ -533,12 +503,6 @@ hook.Add( "GameContentChanged", "ES_RefreshSpawnmenuMaterials", function()
 	end
 
 end )
-
---[[ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ]]
---[[ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ]]
---[[ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ]]
---[[ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ]]
---[[ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ ]]
 
 hook.Add( "PopulateContent", "rb655_extended_spawnmenu_entities", function( pnlContent, tree, node )
 	if ( !cl_addTabs:GetBool() ) then return end

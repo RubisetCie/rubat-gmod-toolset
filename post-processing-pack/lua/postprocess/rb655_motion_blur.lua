@@ -18,7 +18,7 @@ language.Add( "rb655.motion_blur.y_add", "Y Add" )
 language.Add( "rb655.motion_blur.fwd_add", "Forward Add" )
 language.Add( "rb655.motion_blur.spin_add", "Spin Add" )
 
-language.Add( "rb655.motion_blur.engine", "Enable engine Motion Blur" )
+language.Add( "rb655.motion_blur.engine", "Engine Motion Blur" )
 language.Add( "rb655.motion_blur.engine.help", "This must be enabled for this Post Processing effect to work." )
 
 language.Add( "rb655.motion_blur.vel", "Velocity Effects" )
@@ -30,7 +30,7 @@ language.Add( "rb655.motion_blur.shoot", "Shooting Effects" )
 language.Add( "rb655.motion_blur.shoot_mul", "Effect Multiplier" )
 language.Add( "rb655.motion_blur.shoot_mul.help", "This will add special effects whenever you shoot or reload. This is experemental and represents your weapons 'cool down' time." )
 
-language.Add( "rb655.motion_blur.mouse", "Mouse Moving Effects ( Smoothing )" )
+language.Add( "rb655.motion_blur.mouse", "Mouse Moving Effects (Smoothing)" )
 language.Add( "rb655.motion_blur.mouse_mul", "Effect Suppression" )
 language.Add( "rb655.motion_blur.mouse_mul.help", "This will add special effects while looking around. Motion blur basically." )
 
@@ -119,31 +119,42 @@ hook.Add( "GetMotionBlurValues", "rb655_RenderMotionBlurPP", function( x, y, fwd
 end )
 
 local ConVarsDefault = {}
-for k, v in pairs( ConVars ) do  ConVarsDefault[ "pp_motion_blur_" .. k ] = v end
+for k, v in pairs( ConVars ) do ConVarsDefault[ "pp_motion_blur_" .. k ] = v end
 
 list.Set( "PostProcess", "#rb655.motion_blur.name", { icon = "gui/postprocess/rb655_motion_blur.png", convar = "pp_motion_blur", category = "Robotboy655", cpanel = function( panel )
 
-	panel:AddControl( "ComboBox", { MenuButton = 1, Folder = "rb655_motion_blur", Options = { [ "#preset.default" ] = ConVarsDefault }, CVars = table.GetKeys( ConVarsDefault ) } )
+	local presets = vgui.Create( "ControlPresets", panel )
+	presets:SetPreset( "rb655_motion_blur" )
+	presets:AddOption( "#preset.default", ConVars )
+	for k, v in pairs( table.GetKeys( ConVars ) ) do
+		presets:AddConVar( v )
+	end
+	panel:AddPanel( presets )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.motion_blur.enable", Command = "pp_motion_blur" } )
+	panel:CheckBox( "#rb655.motion_blur.enable", "pp_motion_blur" )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.motion_blur.engine", Command = "mat_motion_blur_enabled", Help = true } )
+	panel:CheckBox( "#rb655.motion_blur.engine", "mat_motion_blur_enabled" )
+	panel:ControlHelp( "#rb655.motion_blur.engine.help" )
 
-	panel:AddControl( "Slider", { Label = "#rb655.motion_blur.x_add", Command = "pp_motion_blur_x", Type = "Float", Min = "-2", Max = "2" } )
-	panel:AddControl( "Slider", { Label = "#rb655.motion_blur.y_add", Command = "pp_motion_blur_y", Type = "Float", Min = "-2", Max = "2" } )
-	panel:AddControl( "Slider", { Label = "#rb655.motion_blur.fwd_add", Command = "pp_motion_blur_fwd", Type = "Float", Min = "-1", Max = "1" } )
-	panel:AddControl( "Slider", { Label = "#rb655.motion_blur.spin_add", Command = "pp_motion_blur_spin", Type = "Float", Min = "-1", Max = "1" } )
+	panel:NumSlider( "#rb655.motion_blur.x_add", "pp_motion_blur_x", -2, 2, 2 )
+	panel:NumSlider( "#rb655.motion_blur.y_add", "pp_motion_blur_y", -2, 2, 2 )
+	panel:NumSlider( "#rb655.motion_blur.fwd_add", "pp_motion_blur_fwd", -1, 1, 2 )
+	panel:NumSlider( "#rb655.motion_blur.spin_add", "pp_motion_blur_spin", -1, 1, 2 )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.motion_blur.vel", Command = "pp_motion_blur_vel" } )
-	panel:AddControl( "CheckBox", { Label = "#rb655.motion_blur.vel_adv", Command = "pp_motion_blur_vel_adv" } )
-	panel:AddControl( "Slider", { Label = "#rb655.motion_blur.vel_mul", Command = "pp_motion_blur_vel_mul", Type = "Float", Min = "9000", Max = "200000", Help = true } )
+	panel:CheckBox( "#rb655.motion_blur.vel", "pp_motion_blur_vel" )
+	panel:CheckBox( "#rb655.motion_blur.vel_adv", "pp_motion_blur_vel_adv" )
+	panel:NumSlider( "#rb655.motion_blur.vel_mul", "pp_motion_blur_vel_mul", 9000, 200000, 2 )
+	panel:ControlHelp( "#rb655.motion_blur.vel_mul.help" )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.motion_blur.shoot", Command = "pp_motion_blur_shoot" } )
-	panel:AddControl( "Slider", { Label = "#rb655.motion_blur.shoot_mul", Command = "pp_motion_blur_shoot_mul", Type = "Float", Min = "0.01", Max = "0.1", Help = true } )
+	panel:CheckBox( "#rb655.motion_blur.shoot", "pp_motion_blur_shoot" )
+	panel:NumSlider( "#rb655.motion_blur.shoot_mul", "pp_motion_blur_shoot_mul", 0.01, 0.1, 2 )
+	panel:ControlHelp( "#rb655.motion_blur.shoot_mul.help" )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.motion_blur.mouse", Command = "pp_motion_blur_mouse" } )
-	panel:AddControl( "Slider", { Label = "#rb655.motion_blur.mouse_mul", Command = "pp_motion_blur_mouse_mul", Type = "Float", Min = "5000", Max = "40000", Help = true } )
+	panel:CheckBox( "#rb655.motion_blur.mouse", "pp_motion_blur_mouse" )
+	panel:NumSlider( "#rb655.motion_blur.mouse_mul", "pp_motion_blur_mouse_mul", 5000, 40000, 2 )
+	panel:ControlHelp( "#rb655.motion_blur.mouse_mul.help" )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.motion_blur.view", Command = "pp_motion_blur_view_punch" } )
-	panel:AddControl( "Slider", { Label = "#rb655.motion_blur.view_mul", Command = "pp_motion_blur_view_punch_mul", Type = "Float", Min = "128", Max = "512", Help = true } )
+	panel:CheckBox( "#rb655.motion_blur.view", "pp_motion_blur_view_punch" )
+	panel:NumSlider( "#rb655.motion_blur.view_mul", "pp_motion_blur_view_punch_mul", 128, 512, 2 )
+	panel:ControlHelp( "#rb655.motion_blur.view_mul.help" )
 end } )

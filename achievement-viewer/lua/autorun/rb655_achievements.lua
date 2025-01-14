@@ -128,11 +128,14 @@ end )
 -- Utilities Menu
 
 hook.Add( "PopulateToolMenu", "rb655_AddAchievementViewerOption", function()
-	spawnmenu.AddToolMenuOption( "Utilities", "Robotboy655", "rb655_achievement_viewer", "#rb655.achievement_viewer", "", "", function( panel )
-		panel:AddControl( "Button", {Label = "#rb655.achievement_viewer.open", Command = "menu_achievements"} )
+	spawnmenu.AddToolMenuOption( "Utilities", "rubat", "rb655_achievement_viewer", "#rb655.achievement_viewer", "", "", function( panel )
+		local button = vgui.Create( "DButton", panel )
+		function button:DoClick() LocalPlayer():ConCommand( "menu_achievements" ) end
+		button:SetText( "#rb655.achievement_viewer.open" )
+		panel:AddPanel( button )
 	end )
 end )
 
 hook.Add( "AddToolMenuCategories", "rb655_CreateUtilitiesCategory", function()
-	spawnmenu.AddToolCategory( "Utilities", "Robotboy655", "#Robotboy655" )
+	spawnmenu.AddToolCategory( "Utilities", "rubat", "Fun" )
 end )

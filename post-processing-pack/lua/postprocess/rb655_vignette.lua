@@ -29,8 +29,8 @@ language.Add( "rb655.vignette.underwater", "Underwater effects" )
 language.Add( "rb655.vignette.underwater.help", "Deeper you go underwater, darker the the effect becomes." )
 language.Add( "rb655.vignette.ceiling", "Ceiling effects" )
 language.Add( "rb655.vignette.ceiling.help", "Show the effects when there are things above your head." )
-language.Add( "rb655.vignette.lights", "Light effects" )
-language.Add( "rb655.vignette.lights.help", "Dark vignette in dark areas." )
+--language.Add( "rb655.vignette.lights", "Light effects" )
+--language.Add( "rb655.vignette.lights.help", "Dark vignette in dark areas." )
 
 language.Add( "rb655.vignette.maxalpha", "Max Transparency" )
 language.Add( "rb655.vignette.maxalpha.help", "Maximum transparency of the special vignette effects" )
@@ -114,18 +114,30 @@ end )
 
 list.Set( "PostProcess", "#rb655.vignette.name", { icon = "gui/postprocess/rb655_vignette.png", convar = "pp_vignette", category = "Robotboy655", cpanel = function( panel )
 
-	panel:AddControl( "ComboBox", { MenuButton = 1, Folder = "rb655_vol_light", Options = { [ "#preset.default" ] = ConVars }, CVars = table.GetKeys( ConVars ) } )
+	local presets = vgui.Create( "ControlPresets", panel )
+	presets:SetPreset( "rb655_vignette" )
+	presets:AddOption( "#preset.default", ConVars )
+	for k, v in pairs( table.GetKeys( ConVars ) ) do
+		presets:AddConVar( v )
+	end
+	panel:AddPanel( presets )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.vignette.enable", Command = "pp_vignette" } )
+	panel:CheckBox( "#rb655.vignette.enable", "pp_vignette" )
 
-	panel:AddControl( "Slider", { Label = "#rb655.vignette.passes", Command = "pp_vignette_passes", Min = "1", Max = "5", Help = true } )
+	panel:NumSlider( "#rb655.vignette.passes", "pp_vignette_passes", 1, 5, 0 )
+	panel:ControlHelp( "#rb655.vignette.passes.help" )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.vignette.constant", Command = "pp_vignette_constant" } )
-	panel:AddControl( "Slider", { Label = "#rb655.vignette.alpha", Command = "pp_vignette_alpha", Min = "0", Max = "255", Help = true } )
+	panel:CheckBox( "#rb655.vignette.constant", "pp_vignette_constant" )
+	panel:NumSlider( "#rb655.vignette.alpha", "pp_vignette_alpha", 0, 255, 0 )
+	panel:ControlHelp( "#rb655.vignette.alpha.help" )
 
-	panel:AddControl( "CheckBox", { Label = "#rb655.vignette.underwater", Command = "pp_vignette_underwater", Help = true } )
-	panel:AddControl( "CheckBox", { Label = "#rb655.vignette.ceiling", Command = "pp_vignette_ceiling", Help = true } )
-	--panel:AddControl( "CheckBox", { Label = "#rb655.vignette.lights", Command = "pp_vignette_lights", Help = true } )
-	panel:AddControl( "Slider", { Label = "#rb655.vignette.maxalpha", Command = "pp_vignette_maxalpha", Min = "0", Max = "255", Help = true } )
+	panel:CheckBox( "#rb655.vignette.underwater", "pp_vignette_underwater" )
+	panel:ControlHelp( "#rb655.vignette.underwater.help" )
+	panel:CheckBox( "#rb655.vignette.ceiling", "pp_vignette_ceiling" )
+	panel:ControlHelp( "#rb655.vignette.ceiling.help" )
+	--panel:CheckBox( "#rb655.vignette.lights", "pp_vignette_lights" )
+	--panel:ControlHelp( "#rb655.vignette.lights.help" )
+	panel:NumSlider( "#rb655.vignette.maxalpha", "pp_vignette_maxalpha", 0, 255, 0 )
+	panel:ControlHelp( "#rb655.vignette.maxalpha.help" )
 
 end } )

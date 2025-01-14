@@ -25,7 +25,6 @@ function ENT:PhysicsUpdatePatch( physobj )
 
 end
 
-
 if ( SERVER ) then return end
 
 function ENT:Draw( flags )

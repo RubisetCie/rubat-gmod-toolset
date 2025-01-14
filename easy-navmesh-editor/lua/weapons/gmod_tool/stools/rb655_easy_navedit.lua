@@ -1,5 +1,5 @@
 
-TOOL.Category = "Robotboy655"
+TOOL.Category = "Special"
 TOOL.Name = "#tool.rb655_easy_navedit.name"
 
 TOOL.ClientConVar[ "mode" ] = "0"
@@ -21,7 +21,6 @@ sound.Add( {
 	name = "EDIT_BEGIN_AREA.NotCreating",
 	sound = "buttons/button10.wav"
 } )
-
 
 local Attributes = { {
 		id = 1,
@@ -425,13 +424,24 @@ language.Add( "tool.rb655_easy_navedit.dangerzone", "DANGER ZONE! - These comman
 function TOOL.BuildCPanel( panel )
 	panel:Help( "#tool.rb655_easy_navedit.desc" )
 
-	local listbox = panel:AddControl( "ListBox", { Label = "#tool.rb655_easy_navedit.type", Height = 17 + table.Count( ToolModes ) * 17 } )
+
+	local listbox = vgui.Create( "DListView" )
+	listbox:AddColumn( "#tool.rb655_easy_navedit.type" )
+	listbox:SetMultiSelect( false )
+	listbox:SortByColumn( 1, false )
+	listbox:SetTall( 17 + table.Count( ToolModes ) * 17 )
+	function listbox:OnRowSelected( LineID, Line )
+		for k, v in pairs( Line.data ) do
+			RunConsoleCommand( k, v )
+		end
+	end
 	for id, mode in pairs( ToolModes ) do
 		local line = listbox:AddLine( mode.label .. " - " .. mode.desc )
 		line.data = { rb655_easy_navedit_mode = id }
 
 		if ( GetConVarNumber( "rb655_easy_navedit_mode" ) == id ) then line:SetSelected( true ) end
 	end
+	panel:AddItem( listbox )
 
 	panel:ControlHelp( "#tool.rb655_easy_navedit.info" ):DockMargin( 24, 4, 24, 4 )
 
@@ -439,7 +449,6 @@ function TOOL.BuildCPanel( panel )
 	panel:CheckBox( "#tool.rb655_easy_navedit.nav_compass", "nav_show_compass" )
 	panel:CheckBox( "#tool.rb655_easy_navedit.nav_prefer", "nav_show_func_nav_prefer" )
 	panel:CheckBox( "#tool.rb655_easy_navedit.nav_avoid", "nav_show_func_nav_avoid" )
-	-- panel:CheckBox( "#tool.rb655_easy_navedit.nav_snap", "nav_snap_to_grid" )
 	panel:CheckBox( "#tool.rb655_easy_navedit.nav_snapZ", "nav_create_area_at_feet" )
 	panel:CheckBox( "#tool.rb655_easy_navedit.nav_alignAreas", "nav_create_place_on_ground" )
 
@@ -454,8 +463,6 @@ function TOOL.BuildCPanel( panel )
 
 	panel:Button( "#tool.rb655_easy_navedit.compress", "nav_compress_id" )
 	panel:ControlHelp( "#tool.rb655_easy_navedit.compress.help" ):DockMargin( 24, 4, 24, 4 )
-
-	-- //////////////////////// DANGER ZONE //////////////////////// --
 
 	local dpanel = vgui.Create( "DPanel", panel )
 	dpanel:Dock( TOP )

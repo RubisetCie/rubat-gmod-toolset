@@ -38,9 +38,6 @@ function AddEntFireProperty( name, label, pos, class, input, icon )
 	AddEntFunctionProperty( name, label, pos, class, function( e ) e:Fire( unpack( string.Explode( " ", input ) ) ) end, icon )
 end
 
-
-
-
 if ( SERVER ) then
 
 	local SyncFuncs = {}
@@ -94,8 +91,6 @@ if ( SERVER ) then
 	end )
 
 end
-
-
 
 local ExplodeIcon = "icon16/bomb.png"
 local EnableIcon = "icon16/tick.png"
@@ -165,8 +160,6 @@ AddEntFunctionProperty( "rb655_dissolve", "Disintegrate", 657, function( ent, pl
 end, function( ent )
 	ent:Dissolve( 0, 100 )
 end, "icon16/wand.png" )
-
-
 
 AddEntFireProperty( "rb655_turret_toggle", "Toggle", 655, { "npc_combine_camera", "npc_turret_ceiling", "npc_turret_floor" }, "Toggle", ToggleIcon )
 AddEntFireProperty( "rb655_self_destruct", "Self Destruct", 656, { "npc_turret_floor", "npc_helicopter" }, "SelfDestruct", ExplodeIcon )

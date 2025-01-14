@@ -1,5 +1,5 @@
 
-TOOL.Category = "Robotboy655"
+TOOL.Category = "Special"
 TOOL.Name = "#tool.rb655_easy_bodygroup.name"
 
 local gLastSelecetedEntity = NULL
@@ -156,27 +156,28 @@ ConVarsDefault[ "rb655_easy_bodygroup_skin" ] = 0
 for i = 0, MaxBodyGroups do ConVarsDefault[ "rb655_easy_bodygroup_group" .. i ] = 0 end
 
 function TOOL.BuildCPanel( panel, ent )
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_bodygroup.noglow", Command = "rb655_easy_bodygroup_noglow" } )
+	panel:CheckBox( "#tool.rb655_easy_bodygroup.noglow", "rb655_easy_bodygroup_noglow" )
 
-	if ( !IsValid( ent ) ) then panel:AddControl( "Label", { Text = "#tool.rb655_easy_bodygroup.noent" } ) return end
-	if ( !IsEntValid( ent ) ) then panel:AddControl( "Label", { Text = "#tool.rb655_easy_bodygroup.badent" } ) return end
+	if ( !IsValid( ent ) ) then panel:Help( "#tool.rb655_easy_bodygroup.noent" ) return end
+	if ( !IsEntValid( ent ) ) then panel:Help( "#tool.rb655_easy_bodygroup.badent" ) return end
 
-	panel:AddControl( "ComboBox", {
-		MenuButton = 1,
-		Folder = "rb655_ez_bg_" .. ent:GetModel():lower():Replace( "/", "_" ):StripExtension():sub( 8 ), -- Some hacky bussiness
-		Options = { [ "#preset.default" ] = ConVarsDefault },
-		CVars = table.GetKeys( ConVarsDefault )
-	} )
+	local presets = vgui.Create( "ControlPresets", panel )
+	presets:SetPreset( "rb655_ez_bg_" .. ent:GetModel():lower():Replace( "/", "_" ):StripExtension():sub( 8 ) ) -- Some hacky bussiness
+	presets:AddOption( "#preset.default", ConVarsDefault )
+	for k, v in pairs( table.GetKeys( ConVarsDefault ) ) do
+		presets:AddConVar( v )
+	end
+	panel:AddPanel( presets )
 
 	if ( ent:SkinCount() > 1 ) then
 		LocalPlayer():ConCommand( "rb655_easy_bodygroup_skin " .. ent:GetSkin() )
-		panel:AddControl( "Slider", { Label = "#tool.rb655_easy_bodygroup.skin", Max = ent:SkinCount() - 1, Command = "rb655_easy_bodygroup_skin" } )
+		panel:NumSlider( "#tool.rb655_easy_bodygroup.skin", "rb655_easy_bodygroup_skin", 0, ent:SkinCount() - 1, 0 )
 	end
 
 	for k = 0, ent:GetNumBodyGroups() - 1 do
 		if ( ent:GetBodygroupCount( k ) <= 1 ) then continue end
 		LocalPlayer():ConCommand( "rb655_easy_bodygroup_group" .. k .. " " .. ent:GetBodygroup( k ) )
-		panel:AddControl( "Slider", { Label = MakeNiceName( ent:GetBodygroupName( k ) ), Max = ent:GetBodygroupCount( k ) - 1, Command = "rb655_easy_bodygroup_group" .. k } )
+		panel:NumSlider( MakeNiceName( ent:GetBodygroupName( k ) ), "rb655_easy_bodygroup_group" .. k, 0, ent:GetBodygroupCount( k ) - 1, 0 )
 
 		-- LocalPlayer():ConCommand( "rb655_easy_bodygroup_group " .. k .. " " .. ent:GetBodygroup( k ) )
 		-- local ctrl = panel:NumSlider( MakeNiceName( ent:GetBodygroupName( k ) ), "", 0, ent:GetBodygroupCount( k ) - 1, 0 )

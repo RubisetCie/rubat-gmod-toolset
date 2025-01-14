@@ -1,5 +1,5 @@
 
-TOOL.Category = "Robotboy655"
+TOOL.Category = "Special"
 TOOL.Name = "#tool.rb655_easy_bonemerge.name"
 
 TOOL.ClientConVar[ "noglow" ] = "0"
@@ -465,7 +465,7 @@ function TOOL.BuildCPanel( panel )
 
 	panel:Help( "#tool.rb655_easy_bonemerge.infos" )
 
-	panel:AddControl( "Checkbox", { Label = "#tool.rb655_easy_bonemerge.noglow", Command = "rb655_easy_bonemerge_noglow" } )
+	panel:CheckBox( "#tool.rb655_easy_bonemerge.noglow", "rb655_easy_bonemerge_noglow" )
 
 	local pnl = vgui.Create( "DPanel", panel )
 	pnl:Dock( TOP )
@@ -523,15 +523,6 @@ function TOOL.BuildCPanel( panel )
 					menu:AddOption( "Open bonemerged model in Easy Bodygroup Tool", function() ApplyToolToBonemerge( t.ent, "rb655_easy_bodygroup" ) end )
 				end
 
-				-- Unfortunately this does not work because the server checks if the player is actually looking at the entity..
-				--[[menu:AddOption( "Open entity context menu", function()
-					local tr = LocalPlayer():GetEyeTrace()
-					tr.Entity = t.ent
-					timer.Simple( 0.1, function()
-						properties.OpenEntityMenu( t.ent, tr )
-					end )
-				end )]]
-
 				-- TODO: Set color? Set material?
 				menu:Open()
 			end
@@ -562,10 +553,6 @@ hook.Add( "PreDrawHalos", "rb655_bonemerge_highlight", function()
 
 	halo.Add( { hovered.ent }, color_red, 1, 1, 10, true, true )
 end )
-
---------------------------------------------------------------------------
------------------------------------ HUD ----------------------------------
---------------------------------------------------------------------------
 
 surface.CreateFont( "rb655_easy_bonemerge_font", {
 	size = ScreenScale( 8 ),
@@ -605,8 +592,6 @@ function TOOL:DrawHUD()
 		if ( ent.GetActiveWeapon ) then table.insert( t, ent:GetActiveWeapon() ) end
 		halo.Add( t, HSVToColor( ( CurTime() * 3 ) % 360, math.abs( math.sin( CurTime() / 2 ) ), 1 ), 2, 2, 1 )
 	end
-
-	-- =============================================================================================== --
 
 	local hasBones = false
 	local target = util.TraceLine( {

@@ -1,6 +1,4 @@
 
--------------------------------------------------- Developer --------------------------------------------------
-
 if ( CLIENT ) then
 	net.Receive( "rb655_ep_dev_setclipboard", function( arguments )
 		local str = net.ReadString()
