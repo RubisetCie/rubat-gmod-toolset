@@ -1,8 +1,6 @@
 
 AddCSLuaFile()
 
-if ( SERVER ) then resource.AddWorkshop( "104606791" ) return end
-
 local rb655_batmeter = CreateClientConVar( "rb655_batmeter", "1" )
 local rb655_batmeter_pos = CreateClientConVar( "rb655_batmeter_pos", "1" )
 local color_transblack = Color( 0, 0, 0, 128 )
