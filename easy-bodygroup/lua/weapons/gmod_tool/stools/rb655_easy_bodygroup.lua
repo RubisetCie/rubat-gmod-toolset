@@ -1,5 +1,5 @@
 
-TOOL.Category = "Special"
+TOOL.Category = "Miscellaneous"
 TOOL.Name = "#tool.rb655_easy_bodygroup.name"
 
 local gLastSelecetedEntity = NULL

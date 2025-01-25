@@ -121,7 +121,7 @@ end )
 local ConVarsDefault = {}
 for k, v in pairs( ConVars ) do ConVarsDefault[ "pp_motion_blur_" .. k ] = v end
 
-list.Set( "PostProcess", "#rb655.motion_blur.name", { icon = "gui/postprocess/rb655_motion_blur.png", convar = "pp_motion_blur", category = "Robotboy655", cpanel = function( panel )
+list.Set( "PostProcess", "#rb655.motion_blur.name", { icon = "gui/postprocess/rb655_motion_blur.png", convar = "pp_motion_blur", category = "Miscellaneous", cpanel = function( panel )
 
 	local presets = vgui.Create( "ControlPresets", panel )
 	presets:SetPreset( "rb655_motion_blur" )

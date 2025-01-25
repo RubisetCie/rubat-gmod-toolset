@@ -68,7 +68,7 @@ language.Add( "rb655.light.aimpos.help", "Force the light to shine from where yo
 language.Add( "rb655.light.ent_lights", "Emit lights from entites" )
 language.Add( "rb655.light.ent_lights.help", "Emit lights form entites like grenades, rpg missiles, crossbow bolts and combine balls. This works regardless of Enabled state of the post processing effect." )
 
-list.Set( "PostProcess", "#rb655.light.name", { icon = "gui/postprocess/rb655_light.png", convar = "pp_light", category = "Robotboy655", cpanel = function( panel )
+list.Set( "PostProcess", "#rb655.light.name", { icon = "gui/postprocess/rb655_light.png", convar = "pp_light", category = "Miscellaneous", cpanel = function( panel )
 
 	local presets = vgui.Create( "ControlPresets", panel )
 	presets:SetPreset( "rb655_light" )

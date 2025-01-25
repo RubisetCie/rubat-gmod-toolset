@@ -112,7 +112,7 @@ hook.Add( "RenderScreenspaceEffects", "rb655_rendervignette", function()
 
 end )
 
-list.Set( "PostProcess", "#rb655.vignette.name", { icon = "gui/postprocess/rb655_vignette.png", convar = "pp_vignette", category = "Robotboy655", cpanel = function( panel )
+list.Set( "PostProcess", "#rb655.vignette.name", { icon = "gui/postprocess/rb655_vignette.png", convar = "pp_vignette", category = "Miscellaneous", cpanel = function( panel )
 
 	local presets = vgui.Create( "ControlPresets", panel )
 	presets:SetPreset( "rb655_vignette" )

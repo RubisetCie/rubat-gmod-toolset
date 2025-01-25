@@ -4,7 +4,7 @@ list.Set( "PostProcess", "Bokeh DOF", {
 
 	icon		= "gui/postprocess/dof.png",
 	convar		= "pp_bokeh",
-	category	= "Robotboy655",
+	category	= "Miscellaneous",
 
 	cpanel		= function( CPanel )
 

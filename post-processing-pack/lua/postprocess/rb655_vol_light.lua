@@ -289,7 +289,7 @@ hook.Add( "RenderScreenspaceEffects", "rb655_rendervollight", function()
 	end
 end )
 
-list.Set( "PostProcess", "#rb655.vol_light.name", { icon = "gui/postprocess/rb655_vol_light.png", convar = "pp_vol_light", category = "Robotboy655", cpanel = function( panel )
+list.Set( "PostProcess", "#rb655.vol_light.name", { icon = "gui/postprocess/rb655_vol_light.png", convar = "pp_vol_light", category = "Miscellaneous", cpanel = function( panel )
 
 	local presets = vgui.Create( "ControlPresets", panel )
 	presets:SetPreset( "rb655_vol_light" )

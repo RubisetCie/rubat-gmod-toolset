@@ -1,5 +1,5 @@
 
-TOOL.Category = "Special"
+TOOL.Category = "Miscellaneous"
 TOOL.Name = "#tool.rb655_easy_bonemerge.name"
 
 TOOL.ClientConVar[ "noglow" ] = "0"
