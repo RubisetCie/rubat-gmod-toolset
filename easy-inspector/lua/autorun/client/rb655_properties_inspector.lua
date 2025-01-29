@@ -170,6 +170,9 @@ end
 
 derma.DefineControl( "DProperty_Table", "", PANEL, "DProperty_Generic" )
 
+local IsValid = IsValid
+local CurTime = CurTime
+
 local PANEL = {}
 
 -- TODO: BuildNetworkedVarsTable

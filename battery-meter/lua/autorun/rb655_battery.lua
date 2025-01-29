@@ -1,6 +1,9 @@
 
 AddCSLuaFile()
 
+local system = system
+local surface = surface
+local draw = draw
 local rb655_batmeter = CreateClientConVar( "rb655_batmeter", "1" )
 local rb655_batmeter_pos = CreateClientConVar( "rb655_batmeter_pos", "1" )
 local color_transblack = Color( 0, 0, 0, 128 )

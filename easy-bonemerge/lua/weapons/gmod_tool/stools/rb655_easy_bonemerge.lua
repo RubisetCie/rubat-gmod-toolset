@@ -4,6 +4,10 @@ TOOL.Name = "#tool.rb655_easy_bonemerge.name"
 
 TOOL.ClientConVar[ "noglow" ] = "0"
 
+local CurTime = CurTime
+local IsValid = IsValid
+local LocalPlayer = LocalPlayer
+
 if ( SERVER ) then
 
 	-- Replaces the bonemerged entity with a custom one for easier everything for the tool

@@ -6,6 +6,11 @@ if ( SERVER ) then return end
 language.Add( "spawnmenu.category.addonslegacy", "Addons - Legacy" )
 language.Add( "spawnmenu.category.downloads", "Downloads" )
 
+local IsValid = IsValid
+local file = file
+local draw = draw
+local surface = surface
+
 local function AddRecursive( pnl, folder )
 	local files, folders = file.Find( folder .. "*", "MOD" )
 

@@ -22,6 +22,11 @@ sound.Add( {
 	sound = "buttons/button10.wav"
 } )
 
+local IsValid = IsValid
+local CurTime = CurTime
+local game = game
+local draw = draw
+
 local Attributes = { {
 		id = 1,
 		icon = "C",

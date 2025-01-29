@@ -1,6 +1,9 @@
 
 AddCSLuaFile()
 
+local IsValid = IsValid
+local CurTime = CurTime
+
 local function rb655_property_filter( filtor, ent, ply )
 	if ( type( filtor ) == "string" and filtor != ent:GetClass() ) then return false end
 	if ( type( filtor ) == "table" and !table.HasValue( filtor, ent:GetClass() ) ) then return false end

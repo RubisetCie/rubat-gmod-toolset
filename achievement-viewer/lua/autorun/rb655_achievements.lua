@@ -3,6 +3,9 @@ AddCSLuaFile()
 
 if ( SERVER ) then return end
 
+local surface = surface
+local draw = draw
+
 local PANEL = {}
 
 function PANEL:Init()
@@ -24,9 +27,9 @@ function PANEL:IsAchieved()
 	return achievements.IsAchieved( self.AchID )
 end
 
-function PANEL:Paint()
+local text_col = Color( 217, 217, 217 )
 
-	local text_col = Color( 217, 217, 217 )
+function PANEL:Paint()
 	if ( achievements.IsAchieved( self.AchID ) ) then
 		draw.RoundedBox( 4, 0, 0, self:GetWide(), self:GetTall(), Color( 78, 78, 78 ) )
 	else

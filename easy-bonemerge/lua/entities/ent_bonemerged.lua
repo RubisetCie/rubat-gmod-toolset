@@ -4,6 +4,8 @@ AddCSLuaFile()
 ENT.Base = "base_anim"
 ENT.Type = "anim"
 
+local IsValid = IsValid
+
 function ENT:PhysicsUpdatePatch( physobj )
 
 	if ( CLIENT ) then return end

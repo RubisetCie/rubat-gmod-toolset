@@ -31,6 +31,9 @@ end
 local mat_wireframe = Material( "models/wireframe" )
 local gMeshCache = {}
 
+local IsValid = IsValid
+local CurTime = CurTime
+
 local function ConvertToUnit( units, speed )
 	local unit = GetConVarNumber( "rb655_easy_inspector_units" )
 	if ( unit == 1 ) then -- Kilometres

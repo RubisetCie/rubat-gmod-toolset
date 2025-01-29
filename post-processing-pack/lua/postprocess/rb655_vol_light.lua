@@ -44,6 +44,13 @@ language.Add( "rb655.vol_light.done.help", "Press this button to leave the menu.
 language.Add( "rb655.vol_light.revert", "Revert to defaults" )
 language.Add( "rb655.vol_light.revert.help", "Press this button to reset values of sliders\nabove to defaults of the selected class." )
 
+local GetConVarNumber = GetConVarNumber
+local IsValid = IsValid
+local ents = ents
+local file = file
+local render = render
+local math = math
+
 local pp_vol_light_entities = {}
 function AddCustomClass( class, mul, dark, size, maxdistance, mindistance )
 	if ( pp_vol_light_entities[class] ) then return end

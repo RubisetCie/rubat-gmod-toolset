@@ -1,6 +1,9 @@
 
 AddCSLuaFile()
 
+local IsValid = IsValid
+local net = net
+
 properties.Add( "rb655_make_animatable", {
 	MenuLabel = "#tool.rb655_easy_animation.property",
 	Order = 654,

@@ -42,6 +42,11 @@ local mouse_x = 0
 local mouse_y = 0
 local wep_t_max = 0.0001
 
+local GetConVarNumber = GetConVarNumber
+local LocalPlayer = LocalPlayer
+local IsValid = IsValid
+local math = math
+
 hook.Add( "InputMouseApply", "rb655_MotionBlurPPCaptureXY", function( cmd, x, y, angle )
 	mouse_x = x
 	mouse_y = y

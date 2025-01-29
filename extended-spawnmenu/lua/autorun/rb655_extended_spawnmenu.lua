@@ -17,6 +17,9 @@ if ( SERVER ) then
 
 end
 
+local IsValid = IsValid
+local surface = surface
+
 local cl_addTabs = CreateClientConVar( "rb655_create_sm_tabs", "0", true, true )
 
 --[[local function removeOldTabls()

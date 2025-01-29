@@ -9,6 +9,9 @@ local extraItems = {
 	{ ClassName = "weapon_citizensuitcase", PrintName = "#weapon_citizensuitcase", Category = "Half-Life 2", Author = "VALVe", Spawnable = true }
 }
 
+local IsValid = IsValid
+local draw = draw
+
 local function GiveWeapon( ply, ent, args )
 	if ( !args or !args[ 1 ] or !isstring( args[ 1 ] ) ) then return end
 

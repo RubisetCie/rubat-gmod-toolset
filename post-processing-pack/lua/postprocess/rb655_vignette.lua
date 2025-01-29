@@ -39,6 +39,11 @@ local m = Material( "robotboy655/vignette.png" )
 --local m_w = Material( "robotboy655/vignette_white.png" )
 local alpha_saved = 255
 
+local GetConVarNumber = GetConVarNumber
+local render = render
+local surface = surface
+local math = math
+
 hook.Add( "RenderScreenspaceEffects", "rb655_rendervignette", function()
 
 	if ( !pp_vignette:GetBool() ) then return end

@@ -175,6 +175,8 @@ function ENT:BecomeRagdollLua( force, forcePos )
 	ent:Remove()
 end
 
+local CurTime = CurTime
+
 function ENT:Think()
 
 	-- Clientside only because Velocity is 0 on server
@@ -222,6 +224,8 @@ function ENT:Think()
 end
 
 if ( SERVER ) then return end
+
+local render = render
 
 function ENT:DrawBBox()
 

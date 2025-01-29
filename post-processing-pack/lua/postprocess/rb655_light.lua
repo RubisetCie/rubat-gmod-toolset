@@ -15,6 +15,10 @@ local ConVars = {
 
 for k, v in pairs( ConVars ) do CreateClientConVar( k, v, true, false ) end
 
+local GetConVarNumber = GetConVarNumber
+local DynamicLight = DynamicLight
+local ents = ents
+
 function DrawLight( ent, pos, r, g, b, brightness, size, decay, life )
 	local the_light = DynamicLight( ent:EntIndex() )
 	if ( the_light ) then
