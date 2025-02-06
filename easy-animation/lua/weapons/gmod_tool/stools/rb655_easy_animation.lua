@@ -13,6 +13,10 @@ TOOL.ClientConVar[ "noglow" ] = "0"
 TOOL.ServerConVar[ "nobbox_sv" ] = "0"
 CreateConVar( "rb655_easy_animation_nobbox_sv", "0", FCVAR_ARCHIVE )
 
+local CurTime = CurTime
+local halo = halo
+local math = math
+
 local function MakeNiceName( str )
 	local newname = {}
 	for _, s in pairs( string.Explode( "_", string.Replace( str, " ", "_" ) ) ) do
@@ -473,21 +477,23 @@ function PANEL:RemoveFull()
 	RunConsoleCommand( "rb655_easy_animation_rid", self.id, self.eid )
 end
 
+local clr_white = color_white
+local clr_dark = Color( 50, 50, 50, 225 )
 function PANEL:Paint( w, h )
-	draw.RoundedBox( 2, 0, 0, w, h, Color( 50, 50, 50, 225 ) )
+	draw.RoundedBox( 2, 0, 0, w, h, clr_dark )
 	if ( !self.ent or !IsValid( self.ent ) ) then self:RemoveFull() return end
 
 	surface.SetFont( "DermaDefault" )
-	draw.SimpleText( "#" .. self.ent:GetClass(), "DermaDefault", 24, 0, Color( 255, 255, 255, 255 ) )
-	draw.SimpleText( "#rb655_anim_" .. self.anim, "DermaDefault", 24, 10, Color( 255, 255, 255, 255 ) )
+	draw.SimpleText( "#" .. self.ent:GetClass(), "DermaDefault", 24, 0, clr_white )
+	draw.SimpleText( "#rb655_anim_" .. self.anim, "DermaDefault", 24, 10, clr_white )
 
 	local tW = surface.GetTextSize( "#" .. self.ent:GetClass() )
-	draw.SimpleText( " #" .. self.ent:EntIndex(), "DermaDefault", 24 + tW, 0, Color( 255, 255, 255, 255 ) )
+	draw.SimpleText( " #" .. self.ent:EntIndex(), "DermaDefault", 24 + tW, 0, clr_white )
 
 	local tW2 = surface.GetTextSize( "#rb655_anim_" .. self.anim )
 	local t = " [ S: " .. self.speed .. ", D: " .. self.delay
 	if ( self.loop ) then t = t .. ", Looping" end
-	draw.SimpleText( t .. " ]", "DermaDefault", 24 + tW2, 10, Color( 255, 255, 255, 255 ) )
+	draw.SimpleText( t .. " ]", "DermaDefault", 24 + tW2, 10, clr_white )
 end
 
 function PANEL:SetInfo( id, e, a, s, d, l )

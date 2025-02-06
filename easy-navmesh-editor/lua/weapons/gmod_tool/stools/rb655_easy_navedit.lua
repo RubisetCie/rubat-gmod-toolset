@@ -24,8 +24,13 @@ sound.Add( {
 
 local IsValid = IsValid
 local CurTime = CurTime
+local Color = Color
 local game = game
 local draw = draw
+local color_white = color_white
+local color_black = color_black
+local color_green = Color( 128, 200, 128 )
+local color_trans = Color( 255, 255, 255, 32 )
 
 local Attributes = { {
 		id = 1,
@@ -525,7 +530,7 @@ surface.CreateFont( "navedit_number", {
 local gradient_dn = Material( "gui/gradient_down" )
 local gradient_up = Material( "gui/gradient_up" )
 function TOOL:DrawToolScreen( sw, sh )
-	draw.RoundedBox( 0, 0, 0, sw, sh, Color( 0, 0, 0, 255 ) )
+	draw.RoundedBox( 0, 0, 0, sw, sh, color_black )
 
 	if ( bit.band( self:GetWeapon():GetNWInt( "navedit_blocked", 0 ), 1 ) == 1 ) then
 		surface.SetDrawColor( 255, 0, 0, 64 )
@@ -542,8 +547,8 @@ function TOOL:DrawToolScreen( sw, sh )
 	-- Hovered area ID
 	local hovID = self:GetWeapon():GetNWInt( "navedit_id", -1 )
 	if ( hovID == -1 ) then hovID = "NONE" end
-	draw.SimpleText( "CNavArea ID", "navedit_font", sw / 2, 30, Color( 255, 255, 255 ), 1, 1 )
-	draw.SimpleText( hovID, "navedit_number", sw / 2, 60, Color( 255, 255, 255 ), 1, 1 )
+	draw.SimpleText( "CNavArea ID", "navedit_font", sw / 2, 30, color_white, 1, 1 )
+	draw.SimpleText( hovID, "navedit_number", sw / 2, 60, color_white, 1, 1 )
 
 	-- Attribs
 	local selected = self:GetWeapon():GetNWInt( "navedit_att", math.floor( CurTime() ) % #Attributes + 1 )
@@ -559,15 +564,15 @@ function TOOL:DrawToolScreen( sw, sh )
 		local y = 90 + line * 30
 
 		if ( selected == id ) then
-			draw.RoundedBox( 0, x, y, charw, 30, Color( 255, 255, 255, 32 ) )
+			draw.RoundedBox( 0, x, y, charw, 30, color_trans )
 		end
 
-		local clr = Color( 255, 255, 255 )
-		if ( attr > -1 and bit.band( attr, att.id ) == att.id ) then clr = Color( 128, 200, 128 ) end
+		local clr = color_white
+		if ( attr > -1 and bit.band( attr, att.id ) == att.id ) then clr = color_green end
 		draw.SimpleText( att.icon, "navedit_font", x + charw / 2, y, clr, 1 )
 
 		if ( selected == id ) then
-			draw.SimpleText( att.name, "navedit_font", sw / 2, 160, Color( 255, 255, 255 ), 1 )
+			draw.SimpleText( att.name, "navedit_font", sw / 2, 160, color_white, 1 )
 		end
 
 		if ( w > sw - 64 ) then
@@ -578,5 +583,5 @@ function TOOL:DrawToolScreen( sw, sh )
 
 	-- Selected mode
 	local mode = self:GetToolMode()
-	draw.SimpleText( mode.label:upper(), "navedit_font", sw / 2, 220, Color( 255, 255, 255 ), 1, 1 )
+	draw.SimpleText( mode.label:upper(), "navedit_font", sw / 2, 220, color_white, 1, 1 )
 end

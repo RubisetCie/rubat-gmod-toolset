@@ -33,6 +33,13 @@ local gMeshCache = {}
 
 local IsValid = IsValid
 local CurTime = CurTime
+local Color = Color
+local surface = surface
+local render = render
+local util = util
+local cam = cam
+local draw = draw
+local vector_origin = vector_origin
 
 local function ConvertToUnit( units, speed )
 	local unit = GetConVarNumber( "rb655_easy_inspector_units" )
@@ -67,34 +74,43 @@ local function renderDrawBox( pos, ang, min, max, bWire, color )
 
 end
 
+local clr_white = color_white
+local clr_black = color_black
+local clr_green = Color( 0, 255, 0 )
+local clr_blue2 = Color( 0, 128, 255 )
+local clr_blue = Color( 0, 200, 255 )
+local clr_orange = Color( 255, 128, 0 )
+local clr_red = Color( 255, 0, 0 )
+local clr_pink = Color( 255, 100, 100 )
+
 local function renderBoxDimensions( pos, ang, min, max )
 
 	local p1 = LocalToWorld( min, ang, pos, ang ):ToScreen()
-	draw.SimpleText( Format( "Mins( %.2f, %.2f, %.2f )", min.x, min.y, min.z ), "rb655_attachment", p1.x, p1.y, Color( 255, 0, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+	draw.SimpleText( Format( "Mins( %.2f, %.2f, %.2f )", min.x, min.y, min.z ), "rb655_attachment", p1.x, p1.y, clr_red, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 	local cen = ( min + max ) / 2
 	local p2 = LocalToWorld( cen, ang, pos, ang ):ToScreen()
-	draw.SimpleText( Format( "Center( %.2f, %.2f, %.2f )", cen.x, cen.y, cen.z ), "rb655_attachment", p2.x, p2.y, Color( 0, 255, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+	draw.SimpleText( Format( "Center( %.2f, %.2f, %.2f )", cen.x, cen.y, cen.z ), "rb655_attachment", p2.x, p2.y, clr_green, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 	local p3 = LocalToWorld( max, ang, pos, ang ):ToScreen()
-	draw.SimpleText( Format( "Maxs( %.2f, %.2f, %.2f )", max.x, max.y, max.z ), "rb655_attachment", p3.x, p3.y, Color( 0, 200, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+	draw.SimpleText( Format( "Maxs( %.2f, %.2f, %.2f )", max.x, max.y, max.z ), "rb655_attachment", p3.x, p3.y, clr_blue, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 	if ( GetConVarNumber( "rb655_easy_inspector_box_dim" ) < 1 ) then return end
 
 	local xSizePos = Vector( max )
 	xSizePos.x = cen.x
 	local p4 = LocalToWorld( xSizePos, ang, pos, ang ):ToScreen()
-	draw.SimpleText( Format( "X = %.2f", max.x - min.x ), "rb655_attachment", p4.x, p4.y, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+	draw.SimpleText( Format( "X = %.2f", max.x - min.x ), "rb655_attachment", p4.x, p4.y, clr_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 	local ySizePos = Vector( max )
 	ySizePos.y = cen.y
 	local p5 = LocalToWorld( ySizePos, ang, pos, ang ):ToScreen()
-	draw.SimpleText( Format( "Y = %.2f", max.y - min.y ), "rb655_attachment", p5.x, p5.y, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+	draw.SimpleText( Format( "Y = %.2f", max.y - min.y ), "rb655_attachment", p5.x, p5.y, clr_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 	local zSizePos = Vector( max )
 	zSizePos.z = cen.z
 	local p6 = LocalToWorld( zSizePos, ang, pos, ang ):ToScreen()
-	draw.SimpleText( Format( "Z = %.2f", max.z - min.z ), "rb655_attachment", p6.x, p6.y, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+	draw.SimpleText( Format( "Z = %.2f", max.z - min.z ), "rb655_attachment", p6.x, p6.y, clr_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 end
 
@@ -129,8 +145,8 @@ AddInfoFunc( {
 				cam.End3D()
 			end
 
-			draw.RoundedBox( 0, pos.x - 3, pos.y - 3, 6, 6, Color( 255, 255, 255 ) )
-			draw.RoundedBox( 0, pos.x - 2, pos.y - 2, 4, 4, Color( 0, 0, 0 ) )
+			draw.RoundedBox( 0, pos.x - 3, pos.y - 3, 6, 6, clr_white )
+			draw.RoundedBox( 0, pos.x - 2, pos.y - 2, 4, 4, clr_black )
 
 			local offset = 0
 			for pid, p in pairs( points or {} ) do
@@ -185,8 +201,8 @@ AddInfoFunc( {
 
 			pos = pos:ToScreen()
 
-			draw.RoundedBox( 0, pos.x - 3, pos.y - 3, 6, 6, Color( 255, 255, 255 ) )
-			draw.RoundedBox( 0, pos.x - 2, pos.y - 2, 4, 4, Color( 0, 0, 0 ) )
+			draw.RoundedBox( 0, pos.x - 3, pos.y - 3, 6, 6, clr_white )
+			draw.RoundedBox( 0, pos.x - 2, pos.y - 2, 4, 4, clr_black )
 
 			local offset = 0
 			for id, p in pairs( points or {} ) do
@@ -424,25 +440,25 @@ AddInfoFunc( {
 
 		cam.Start3D( EyePos(), EyeAngles() )
 			local mul = 4
-			render.DrawLine( pos, pos + Vector( vel.x / mul, 0, 0 ), Color( 255, 0, 0 ), false )
-			render.DrawLine( pos, pos + Vector( 0, vel.y / mul, 0 ), Color( 0, 255, 0 ), false )
-			render.DrawLine( pos, pos + Vector( 0, 0, vel.z / mul ), Color( 0, 128, 255 ), false )
-			render.DrawLine( pos, pos + vel / mul, Color( 255, 255, 255 ), false )
+			render.DrawLine( pos, pos + Vector( vel.x / mul, 0, 0 ), clr_red, false )
+			render.DrawLine( pos, pos + Vector( 0, vel.y / mul, 0 ), clr_green, false )
+			render.DrawLine( pos, pos + Vector( 0, 0, vel.z / mul ), clr_blue2, false )
+			render.DrawLine( pos, pos + vel / mul, clr_white, false )
 		cam.End3D()
 
 		if ( !labels ) then return end
 
 		local p = ( pos + Vector( vel.x / mul, 0, 0 ) ):ToScreen()
-		draw.SimpleText( math.floor( ConvertToUnit( vel.x, true ) * 10 ) / 10, "rb655_attachment", p.x, p.y, Color( 255, 0, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( math.floor( ConvertToUnit( vel.x, true ) * 10 ) / 10, "rb655_attachment", p.x, p.y, clr_red, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 		local p2 = ( pos + Vector( 0, vel.y / mul, 0 ) ):ToScreen()
-		draw.SimpleText( math.floor( ConvertToUnit( vel.y, true ) * 10 ) / 10, "rb655_attachment", p2.x, p2.y, Color( 0, 255, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( math.floor( ConvertToUnit( vel.y, true ) * 10 ) / 10, "rb655_attachment", p2.x, p2.y, clr_green, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 		local p3 = ( pos + Vector( 0, 0, vel.z / mul ) ):ToScreen()
-		draw.SimpleText( math.floor( ConvertToUnit( vel.z, true ) * 10 ) / 10, "rb655_attachment", p3.x, p3.y, Color( 0, 128, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( math.floor( ConvertToUnit( vel.z, true ) * 10 ) / 10, "rb655_attachment", p3.x, p3.y, clr_blue2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 		local p4 = ( pos + vel / mul ):ToScreen()
-		draw.SimpleText( math.floor( ConvertToUnit( vel:Length(), true ) * 10 ) / 10, "rb655_attachment", p4.x, p4.y, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( math.floor( ConvertToUnit( vel:Length(), true ) * 10 ) / 10, "rb655_attachment", p4.x, p4.y, clr_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	end
 } )
 AddInfoFunc( {
@@ -455,21 +471,21 @@ AddInfoFunc( {
 
 		cam.Start3D( EyePos(), EyeAngles() )
 			local mul = 50
-			render.DrawLine( pos, pos + ang:Forward() * mul, Color( 255, 0, 0 ), false )
-			render.DrawLine( pos, pos + ang:Right() * mul, Color( 0, 255, 0 ), false )
-			render.DrawLine( pos, pos + ang:Up() * mul, Color( 0, 128, 255 ), false )
+			render.DrawLine( pos, pos + ang:Forward() * mul, clr_red, false )
+			render.DrawLine( pos, pos + ang:Right() * mul, clr_green, false )
+			render.DrawLine( pos, pos + ang:Up() * mul, clr_blue2, false )
 		cam.End3D()
 
 		if ( !labels ) then return end
 
 		local p = ( pos + ang:Forward() * 51 ):ToScreen()
-		draw.SimpleText( "Forward", "rb655_attachment", p.x, p.y, Color( 255, 0, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( "Forward", "rb655_attachment", p.x, p.y, clr_red, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 		local p2 = ( pos + ang:Right() * 51 ):ToScreen()
-		draw.SimpleText( "Right", "rb655_attachment", p2.x, p2.y, Color( 0, 255, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( "Right", "rb655_attachment", p2.x, p2.y, clr_green, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 		local p3 = ( pos + ang:Up() * 51 ):ToScreen()
-		draw.SimpleText( "Up", "rb655_attachment", p3.x, p3.y, Color( 0, 128, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+		draw.SimpleText( "Up", "rb655_attachment", p3.x, p3.y, clr_blue2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 	end
 } )
 AddInfoFunc( {
@@ -481,21 +497,21 @@ AddInfoFunc( {
 	end,
 	func = function( ent, labels, dirs )
 
-		local com_pos = ent.InspectorMassCenter or Vector( 0, 0, 0 )
+		local com_pos = ent.InspectorMassCenter or vector_origin
 		local textpos = ent:GetPos() + com_pos
 
 		cam.Start3D( EyePos(), EyeAngles() )
 			local mul = 10
 			local ang = ent:GetAngles()
-			render.DrawLine( textpos, textpos + ang:Forward() * mul, Color( 255, 0, 0 ), false )
-			render.DrawLine( textpos, textpos + ang:Right() * mul, Color( 0, 255, 0 ), false )
-			render.DrawLine( textpos, textpos + ang:Up() * mul, Color( 0, 128, 255 ), false )
+			render.DrawLine( textpos, textpos + ang:Forward() * mul, clr_red, false )
+			render.DrawLine( textpos, textpos + ang:Right() * mul, clr_green, false )
+			render.DrawLine( textpos, textpos + ang:Up() * mul, clr_blue2, false )
 		cam.End3D()
 
 		if ( !labels ) then return end
 		textpos = textpos:ToScreen()
 		if ( textpos.visible ) then
-			draw.SimpleText( "( " .. com_pos.x .. ", " .. com_pos.y .. ", " .. com_pos.z .. " )", "rb655_attachment", textpos.x + 20, textpos.y - 10, Color( 255, 255, 255 ), TEXT_ALIGN_LEFT )
+			draw.SimpleText( "( " .. com_pos.x .. ", " .. com_pos.y .. ", " .. com_pos.z .. " )", "rb655_attachment", textpos.x + 20, textpos.y - 10, clr_white, TEXT_ALIGN_LEFT )
 		end
 
 	end
@@ -516,32 +532,32 @@ AddInfoFunc( {
 		local dir = ent == game.GetWorld() and IsValid( LocalPlayer():GetWeapon( "gmod_tool" ) ) and LocalPlayer():GetWeapon( "gmod_tool" ):GetNWVector( "LocalWorldDir" ) or ent:GetNWVector( "LocalDir" )
 
 		cam.Start3D( EyePos(), EyeAngles() )
-			render.DrawLine( pos, pos1, Color( 255, 255, 255 ), false )
-			render.DrawLine( pos, pos2, Color( 255, 128, 0 ), false )
-			render.DrawLine( pos1, pos2, Color( 0, 128, 255 ), false )
+			render.DrawLine( pos, pos1, clr_white, false )
+			render.DrawLine( pos, pos2, clr_orange, false )
+			render.DrawLine( pos1, pos2, clr_blue2, false )
 		cam.End3D()
 
 		if ( labels ) then
 			local p1 = pos1:ToScreen()
-			draw.SimpleText( "Hit Pos", "rb655_attachment", p1.x, p1.y, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-			draw.SimpleText( math.floor( ConvertToUnit( pos1:Distance( pos3 ) ) * 10 ) / 10, "rb655_attachment", p1.x, p1.y + 10, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( "Hit Pos", "rb655_attachment", p1.x, p1.y, clr_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( math.floor( ConvertToUnit( pos1:Distance( pos3 ) ) * 10 ) / 10, "rb655_attachment", p1.x, p1.y + 10, clr_white, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 			local p2 = pos2:ToScreen()
-			draw.SimpleText( "Aim Pos", "rb655_attachment", p2.x, p2.y, Color( 255, 128, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-			draw.SimpleText( math.floor( ConvertToUnit( pos2:Distance( pos3 ) ) * 10 ) / 10, "rb655_attachment", p2.x, p2.y + 10, Color( 255, 128, 0 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( "Aim Pos", "rb655_attachment", p2.x, p2.y, clr_orange, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( math.floor( ConvertToUnit( pos2:Distance( pos3 ) ) * 10 ) / 10, "rb655_attachment", p2.x, p2.y + 10, clr_orange, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 			local p = {
 				x = ( p1.x + p2.x ) / 2,
 				y = ( p1.y + p2.y ) / 2
 			}
-			draw.SimpleText( "Distance", "rb655_attachment", p.x, p.y, Color( 0, 128, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
-			draw.SimpleText( math.floor( ConvertToUnit( pos1:Distance( pos2 ) ) * 10 ) / 10, "rb655_attachment", p.x, p.y + 10, Color( 0, 128, 255 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( "Distance", "rb655_attachment", p.x, p.y, clr_blue2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( math.floor( ConvertToUnit( pos1:Distance( pos2 ) ) * 10 ) / 10, "rb655_attachment", p.x, p.y + 10, clr_blue2, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 		end
 
 		if ( dirs ) then
 			cam.Start3D( EyePos(), EyeAngles() )
-				render.DrawLine( pos2, pos2 + tr.HitNormal * 8, Color( 255, 128, 0 ), false )
-				render.DrawLine( pos1, pos1 + dir * 8, Color( 255, 255, 255 ), false )
+				render.DrawLine( pos2, pos2 + tr.HitNormal * 8, clr_orange, false )
+				render.DrawLine( pos1, pos1 + dir * 8, clr_white, false )
 			cam.End3D()
 		end
 
@@ -572,8 +588,8 @@ AddInfoFunc( {
 		local textpos = ( pos + Vector( 0, 0, seqinfo.bbmax.z + 10 ) ):ToScreen()
 
 		if ( textpos.visible ) then
-			draw.SimpleText( seqinfo.label, "rb655_attachment", textpos.x, textpos.y - 20, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER )
-			draw.SimpleText( seqinfo.activityname .. " (" .. seqinfo.activity .. ")", "rb655_attachment", textpos.x, textpos.y - 4, Color( 255, 255, 255 ), TEXT_ALIGN_CENTER )
+			draw.SimpleText( seqinfo.label, "rb655_attachment", textpos.x, textpos.y - 20, clr_white, TEXT_ALIGN_CENTER )
+			draw.SimpleText( seqinfo.activityname .. " (" .. seqinfo.activity .. ")", "rb655_attachment", textpos.x, textpos.y - 4, clr_white, TEXT_ALIGN_CENTER )
 		end
 
 		renderBoxDimensions( pos, ang, seqinfo.bbmin, seqinfo.bbmax )
@@ -715,7 +731,7 @@ function TOOL:SendEntityInfo( ent )
 	ent.InspectorMapID = ent.MapCreationID and ent:MapCreationID() or -1
 	ent.InspectorName = ent.GetName and ent:GetName() or ""
 	ent.InspectorMass = IsValid( physObj ) and physObj:GetMass() or 0
-	ent.InspectorMassCenter = IsValid( physObj ) and physObj:GetMassCenter() or Vector( 0, 0, 0 )
+	ent.InspectorMassCenter = IsValid( physObj ) and physObj:GetMassCenter() or vector_origin
 	ent.InspectorMat = IsValid( physObj ) and physObj:GetMaterial() or "" -- Should use the trace!
 	ent.InsepctorPhysHash = ( IsValid( physObj ) and physObj:GetMeshConvexes() ) and util.CRC( util.TableToJSON( physObj:GetMeshConvexes() ) ) or ""
 
@@ -778,7 +794,7 @@ function TOOL:Think()
 		local InspectorMapID = ent.MapCreationID and ent:MapCreationID() or -1
 		local InspectorName = ent.GetName and ent:GetName() or ""
 		local InspectorMass = IsValid( physObj ) and physObj:GetMass() or 0
-		local InspectorMassCenter = IsValid( physObj ) and physObj:GetMassCenter() or Vector( 0, 0, 0 )
+		local InspectorMassCenter = IsValid( physObj ) and physObj:GetMassCenter() or vector_origin
 		local InspectorMat = IsValid( physObj ) and physObj:GetMaterial() or ""
 		local InsepctorPhysHash = ( IsValid( physObj ) and physObj:GetMeshConvexes() ) and util.CRC( util.TableToJSON( physObj:GetMeshConvexes() ) ) or ""
 
@@ -1068,7 +1084,7 @@ function TOOL:DrawToolScreen( sw, sh )
 	local x = 0
 	local y = ( sh - h ) / 2 + math.cos( self:GetSelectedFunc() / #InfoFuncs * math.pi ) * ( h - sh ) / 2
 
-	draw.RoundedBox( 4, 0, 0, sw, sh, Color( 0, 0, 0, 255 ) )
+	draw.RoundedBox( 4, 0, 0, sw, sh, clr_black )
 
 	-- Always start the animation from when we change the inspector
 	if ( self.UILastSelected != self:GetSelectedFunc() ) then
@@ -1089,7 +1105,7 @@ function TOOL:DrawToolScreen( sw, sh )
 		else
 			x = 0
 		end
-		draw.SimpleText( t.name, "rb655_inspector_menu", x + 5, y + 5 + ( id - 1 ) * lineH, Color( 255, 255, 255 ) )
+		draw.SimpleText( t.name, "rb655_inspector_menu", x + 5, y + 5 + ( id - 1 ) * lineH, clr_white )
 	end
 end
 
@@ -1150,7 +1166,7 @@ function TOOL:DrawHUD( b )
 
 			--if ( !tobool( self:GetClientNumber( "names" ) ) ) then return end
 
-			draw.SimpleText( check, "rb655_attachment", pos.x, pos.y, Color( 255, 100, 100 ), TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
+			draw.SimpleText( check, "rb655_attachment", pos.x, pos.y, clr_pink, TEXT_ALIGN_CENTER, TEXT_ALIGN_CENTER )
 
 			return
 		end

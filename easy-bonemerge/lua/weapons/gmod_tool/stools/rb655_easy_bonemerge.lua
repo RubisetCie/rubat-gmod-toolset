@@ -7,6 +7,9 @@ TOOL.ClientConVar[ "noglow" ] = "0"
 local CurTime = CurTime
 local IsValid = IsValid
 local LocalPlayer = LocalPlayer
+local vector_origin = vector_origin
+local angle_zero = angle_zero
+local util = util
 
 if ( SERVER ) then
 
@@ -107,8 +110,8 @@ if ( SERVER ) then
 		-- I don't remember why I put these here
 		Ent2:SetMoveType( MOVETYPE_NONE )
 		Ent2:SetSolid( SOLID_NONE )
-		Ent2:SetLocalPos( Vector( 0, 0, 0 ) )
-		Ent2:SetLocalAngles( Angle( 0, 0, 0 ) )
+		Ent2:SetLocalPos( vector_origin )
+		Ent2:SetLocalAngles( angle_zero )
 
 		Ent2:AddEffects( EF_BONEMERGE )
 		--Ent2:Fire( "SetParentAttachment", ent_parent:GetAttachments()[1].name )
@@ -384,7 +387,7 @@ function TOOL:Think()
 	end
 
 	if ( IsValid( tr.Entity ) and !IsValid( self.GhostEntity ) ) then
-		self:MakeGhostEntity( tr.Entity:GetModel(), Vector( 0, 0, 0 ), Angle( 0, 0, 0 ) )
+		self:MakeGhostEntity( tr.Entity:GetModel(), vector_origin, angle_zero )
 	end
 
 	self:UpdateGhostEntity( self.GhostEntity, self:GetOwner(), tr )
