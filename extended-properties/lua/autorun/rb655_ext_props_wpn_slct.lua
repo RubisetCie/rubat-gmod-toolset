@@ -15,7 +15,7 @@ local IsValid = IsValid
 local draw = draw
 
 local function GiveWeapon( ply, ent, args )
-	if ( !args or !args[ 1 ] or !isstring( args[ 1 ] ) ) then return end
+	if ( !ent:IsNPC() or !args or !args[ 1 ] or !isstring( args[ 1 ] ) ) then return end
 
 	local className = args[ 1 ]
 
